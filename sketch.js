@@ -5,6 +5,7 @@ let stars = [];
 let starImg = null; // loaded from assets/star.png when available
 let logoImg = null; // loaded from assets/logo.png when available
 let bgImg = null; // loaded from assets/background.png when available
+let startGameImg = null; // loaded from assets/start_game.png when available
 let skyline = [];
 let scene = 'title';
 let startBlink = 0;
@@ -39,6 +40,13 @@ function preload() {
   }, err => {
     console.log('assets/background.png not found — using procedural gradient');
     bgImg = null;
+  });
+  // Try to load a user-provided start game button image at assets/start_game.png.
+  loadImage('assets/start_game.png', img => {
+    startGameImg = img;
+  }, err => {
+    console.log('assets/start_game.png not found — using fallback text');
+    startGameImg = null;
   });
 }
 
@@ -268,20 +276,30 @@ function drawStartText() {
   if (visible) {
     push();
     textAlign(CENTER, CENTER);
-    textSize(16);
-    fill(240);
-    noStroke();
-    text('START GAME', width / 2, height * 0.6 + 10);
+    
+    if (startGameImg) {
+      // Draw the image, scaled to a reasonable size
+      imageMode(CENTER);
+      let btnWidth = min(width * 0.25, 250);
+      let btnHeight = btnWidth * (startGameImg.height / startGameImg.width);
+      image(startGameImg, width / 2, height * 0.6 + 10, btnWidth, btnHeight);
+    } else {
+      // Fallback: draw text if image not available
+      textSize(16);
+      fill(240);
+      noStroke();
+      text('START GAME', width / 2, height * 0.6 + 10);
+    }
     pop();
   }
 }
 
 function drawSkyline() {
   push();
-  translate(0, height - 120);
+  translate(0, height - 160);
   noStroke();
   fill(6, 8, 40);
-  rect(0, 0, width, 120);
+  rect(0, 0, width, 160);
   for (let s of skyline) {
     fill(4, 6, 30);
     rect(s.x, 120 - s.h, s.w + 1, s.h);
