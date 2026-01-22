@@ -1,0 +1,21 @@
+{
+  "name": "fortaleza-in-cidade-ecologica",
+  "version": "1.0.0",
+  "description": "A p5.js project with p5.play library support",
+  "main": "index.html",
+  "scripts": {
+    "start": "http-server -c-1 -o -p 8080",
+    "dev": "http-server -c-1 -o -p 8080"
+  },
+  "keywords": [
+    "p5.js",
+    "p5.play",
+    "interactive",
+    "creative-coding"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
+}
