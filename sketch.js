@@ -4,6 +4,7 @@
 let stars = [];
 let starImg = null; // loaded from assets/star.png when available
 let logoImg = null; // loaded from assets/logo.png when available
+let bgImg = null; // loaded from assets/background.png when available
 let skyline = [];
 let scene = 'title';
 let startBlink = 0;
@@ -31,6 +32,13 @@ function preload() {
   }, err => {
     console.log('assets/logo.png not found — using procedural fallback');
     logoImg = null;
+  });
+  // Try to load a user-provided background image at assets/background.png.
+  loadImage('assets/background.png', img => {
+    bgImg = img;
+  }, err => {
+    console.log('assets/background.png not found — using procedural gradient');
+    bgImg = null;
   });
 }
 
@@ -98,27 +106,36 @@ function initSkyline() {
   let cols = 60;
   let w = width / cols;
   for (let i = 0; i < cols; i++) {
-    let h = random(0.08, 0.28) * height;
-    if (i % 7 === 0) h *= random(1.0, 1.6);
-    skyline.push({x: i * w, w: w, h: h});
+    let h = random(0.06, 0.18) * height; // reduced from 0.08-0.28
+    if (i % 7 === 0) h *= random(1.0, 1.4); // reduced from 1.0-1.6
+    skyline.push({
+      x: i * w,
+      w: w,
+      h: h,
+      windowCounter: 0, // frame counter for window state changes
+      windowOn: random() > 0.5, // randomly start on or off
+      windowYPositions: [] // store fixed Y positions for this building's windows
+    });
+    // pre-generate window Y positions
+    for (let wx = 0; wx < 6; wx++) {
+      skyline[i].windowYPositions.push(random(8, h - 6));
+    }
   }
 }
 
 function drawBackground() {
-  // radial-ish gradient from center
-  let c1 = color(5, 60, 45);
-  let c2 = color(3, 40, 35);
-  for (let r = 0; r < width * 0.8; r += 2) {
-    let inter = map(r, 0, width * 0.8, 0, 1);
-    let c = lerpColor(c1, c2, inter);
-    noStroke();
-    fill(red(c), green(c), blue(c), 255 * (1 - inter * 0.9));
-    ellipse(width / 2, height * 0.36, r, r * 0.6);
+  // Replicate the background gradient using p5 instead of image
+  // Gradient from outer tone (dark green) to inner tone (brighter green)
+  for (let y = 0; y < height; y++) {
+    let inter = map(y, 0, height, 0, 1);
+    // gradient from outer tone rgb(0, 61, 34) at top to inner tone rgb(0, 135, 62) at bottom
+    let r = lerp(0, 0, inter);
+    let g = lerp(61, 135, inter);
+    let b = lerp(34, 62, inter);
+    stroke(r, g, b);
+    line(0, y, width, y);
   }
-  // a base fill to ensure edges
   noStroke();
-  fill(c2);
-  rect(0, 0, width, height);
 }
 
 function drawStars() {
@@ -268,11 +285,20 @@ function drawSkyline() {
   for (let s of skyline) {
     fill(4, 6, 30);
     rect(s.x, 120 - s.h, s.w + 1, s.h);
-    // windows as small green pixels
-    for (let wx = s.x; wx < s.x + s.w; wx += s.w / 6) {
-      if (random() < 0.35) {
+    
+    // increment counter and toggle windows every 1 second (60 frames at 60fps)
+    s.windowCounter++;
+    if (s.windowCounter >= 60) {
+      s.windowCounter = 0;
+      s.windowOn = !s.windowOn;
+    }
+    
+    // draw windows at fixed positions if currently "on"
+    if (s.windowOn) {
+      for (let i = 0; i < 6; i++) {
+        let wx = s.x + (i * s.w / 6);
         fill(50, 220, 90);
-        rect(wx + 2, 120 - random(8, s.h - 6), 4, 4);
+        rect(wx + 2, 120 - s.windowYPositions[i], 4, 4);
       }
     }
   }
