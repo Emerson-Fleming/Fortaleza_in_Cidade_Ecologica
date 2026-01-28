@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>p5 Manual Annotator</title>
+    <link rel="stylesheet" href="style_annotator.css">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.min.js"></script>
+  </head>
+  <body>
+    <div class="topbar">
+      <label class="file-label">Choose images
+        <input id="fileInput" type="file" accept="image/*" multiple>
+      </label>
+      <div class="buttons">
+        <button id="prevBtn">Prev (P)</button>
+        <button id="nextBtn">Next (N)</button>
+        <button id="undoBtn">Undo (Z)</button>
+        <button id="snapBtn">Snap: ON</button>
+        <button id="maskBtn">Mask Mode: OFF</button>
+        <button id="saveBtn">Save JSON (S)</button>
+      </div>
+      <div id="info" class="info">No images loaded.</div>
+    </div>
+
+    <div id="sketch-holder"></div>
+
+    <script src="sketch_annotator.js"></script>
+  </body>
+</html>
