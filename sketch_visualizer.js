@@ -86,10 +86,15 @@ function draw() {
 
   // draw trees at annotated points
   if (current.points && current.points.length > 0) {
-    for (let p of current.points) {
+    // sort points by y-position (back to front) so closer trees draw on top
+    const sortedPoints = [...current.points].sort((a, b) => a.y - b.y);
+    
+    for (let p of sortedPoints) {
       push();
-      const w = treeImg.width * treeScale;
-      const h = treeImg.height * treeScale;
+      // map y-axis to scale: top of image (y=0) = 0.025, bottom of image (y=height) = 0.7
+      const depthScale = map(p.y, 0, current.photo.height, 0.025, 0.7);
+      const w = treeImg.width * depthScale;
+      const h = treeImg.height * depthScale;
       // plant from bottom: top-left corner at (p.x - w/2, p.y - h) so bottom aligns with point
       image(treeImg, p.x - w/2, p.y - h, w, h);
       pop();
