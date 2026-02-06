@@ -2,7 +2,7 @@ let manifest = null;
 let annotations = null;
 let imgIndex = 0;
 let imgCache = {};
-let treeImg;
+let treeImg1;
 let treeScale = 1.0;
 let cnv;
 let plantedTrees = []; // array of indices into current photo's points
@@ -11,7 +11,12 @@ let preloading = new Set(); // Track which images are currently being preloaded
 const CACHE_SIZE = 5; // Keep 5 images in memory
 
 function preload() {
-  treeImg = loadImage('assets/Carnauba_1000_FINAL.png');
+  treeImg1 = loadImage('assets/trees/Carnauba_1000_FINAL.png');
+  treeImg2 = loadImage('assets/trees/Cajueiro_1000_FINAL.png');
+  treeImg3 = loadImage('assets/trees/Juazeiro_1000_FINAL.png');
+  treeImg4 = loadImage('assets/trees/Juca_1000_FINAL.png');
+  treeImg5 = loadImage('assets/trees/Mororo_1000_FINAL.png');
+  treeImg6 = loadImage('assets/trees/Oiti_1000_FINAL.png');
   manifest = loadJSON('assets/json/manifest.json');
   annotations = loadJSON('assets/json/annotations.json');
 }
@@ -137,14 +142,14 @@ function draw() {
       
       // Check if this point has a tree planted
       if (plantedTrees.includes(i)) {
-        // Perspective scale: 0.2 at top of image, 0.7 at bottom
-        const pScale = 0.2 + 0.5 * (p.y / height);
-        const tw = treeImg.width * pScale;
-        const th = treeImg.height * pScale;
+        // Perspective scale for Street View: 0.05 at top (far), 0.8 at bottom (close)
+        const pScale = 0.00000000005 + 0.75 * (p.y / height);
+        const tw = treeImg1.width * pScale;
+        const th = treeImg1.height * pScale;
         // Draw tree anchored at bottom-center on the dot
         push();
         imageMode(CORNER);
-        image(treeImg, p.x - tw / 2, p.y - th, tw, th);
+        image(treeImg1, p.x - tw / 2, p.y - th, tw, th);
         pop();
       } else {
         // Draw red dot for available points
