@@ -1,13 +1,19 @@
-let photos = []; // { photo: p5.Image, name: string, points: [...] }
+let manifest = null;
+let annotations = null;
 let imgIndex = 0;
+let imgCache = {};
 let treeImg;
 let treeScale = 1.0;
 let cnv;
 let plantedTrees = []; // array of indices into current photo's points
-let usedPointIndices = new Set(); // track which point indices have been used
+let loading = false;
+let preloading = new Set(); // Track which images are currently being preloaded
+const CACHE_SIZE = 5; // Keep 5 images in memory
 
 function preload() {
   treeImg = loadImage('assets/Carnauba_1000_FINAL.png');
+  manifest = loadJSON('assets/json/manifest.json');
+  annotations = loadJSON('assets/json/annotations.json');
 }
 
 function setup() {
@@ -20,148 +26,210 @@ function setup() {
   document.getElementById('prevBtn').addEventListener('click', prevPhoto);
   document.getElementById('plantBtn').addEventListener('click', plantRandomTree);
   document.getElementById('clearBtn').addEventListener('click', clearAllTrees);
-
-  loadPhotosAndPoints();
+  
+  loadCurrent();
 }
 
-async function loadPhotosAndPoints() {
-  try {
-    // fetch list of photos
-    const photoRes = await fetch('assets/photos/');
-    const photoHTML = await photoRes.text();
-    const photoParser = new DOMParser();
-    const photoDoc = photoParser.parseFromString(photoHTML, 'text/html');
-    const photoLinks = Array.from(photoDoc.querySelectorAll('a'))
-      .map(a => a.href)
-      .filter(href => /\.(png|jpg|jpeg)$/i.test(href))
-      .map(href => href.split('/').pop());
+function loadCurrent() {
+  if (!manifest || !manifest.photos.length) return;
+  
+  const photoName = manifest.photos[imgIndex];
+  const photoPath = 'assets/photos/' + photoName;
+  
+  // Clean up cache
+  cleanCache();
+  
+  // Load image if not cached
+  if (!imgCache[photoName]) {
+    loading = true;
+    loadImage(photoPath, (img) => {
+      imgCache[photoName] = img;
+      resizeCanvas(img.width, img.height);
+      loading = false;
+      preloadNearby();
+    }, (err) => {
+      console.error('Failed to load image:', photoPath, err);
+      loading = false;
+    });
+  } else {
+    const img = imgCache[photoName];
+    resizeCanvas(img.width, img.height);
+    loading = false;
+    preloadNearby();
+  }
+  
+  // Reset planted trees
+  plantedTrees = [];
+  updateInfo();
+}
 
-    // load each photo with its corresponding JSON
-    for (const photoName of photoLinks) {
-      const baseName = photoName.split('.').slice(0, -1).join('.');
-      try {
-        const photoData = await loadImage(`assets/photos/${photoName}`);
-        const jsonRes = await fetch(`assets/json/${baseName}.json`);
-        let points = [];
-        if (jsonRes.ok) {
-          const data = await jsonRes.json();
-          // handle both single object and array format
-          if (Array.isArray(data)) {
-            const entry = data.find(d => d.filename === photoName);
-            points = entry ? entry.points : [];
-          } else if (data.points) {
-            points = data.points;
-          }
-        }
-        photos.push({ photo: photoData, name: photoName, points });
-      } catch (err) {
-        console.warn(`Error loading ${photoName}:`, err);
+function cleanCache() {
+  if (!manifest) return;
+  
+  const keepRange = Math.floor(CACHE_SIZE / 2);
+  const keysToDelete = [];
+  
+  for (let photoName in imgCache) {
+    const cacheIndex = manifest.photos.indexOf(photoName);
+    if (cacheIndex === -1 || Math.abs(cacheIndex - imgIndex) > keepRange) {
+      keysToDelete.push(photoName);
+    }
+  }
+  
+  keysToDelete.forEach(key => delete imgCache[key]);
+}
+
+function preloadNearby() {
+  if (!manifest || loading) return;
+  
+  for (let offset = 1; offset <= 2; offset++) {
+    const idx = imgIndex + offset;
+    if (idx < manifest.photos.length) {
+      const photoName = manifest.photos[idx];
+      if (!imgCache[photoName] && !preloading.has(photoName)) {
+        preloading.add(photoName);
+        const photoPath = 'assets/photos/' + photoName;
+        loadImage(photoPath, (img) => {
+          imgCache[photoName] = img;
+          preloading.delete(photoName);
+        }, (err) => {
+          console.warn('Preload failed:', photoPath);
+          preloading.delete(photoName);
+        });
       }
     }
-
-    if (photos.length > 0) {
-      resizeCanvas(photos[0].photo.width, photos[0].photo.height);
-    }
-    updateInfo();
-  } catch (err) {
-    console.error('Error loading photos:', err);
-    updateInfo();
   }
 }
 
 function draw() {
   background(200);
-  if (!photos.length || !photos[imgIndex]) {
-    push();
-    fill(0);
-    textAlign(CENTER, CENTER);
+  
+  if (!manifest || !manifest.photos.length) {
+    push(); fill(0); textAlign(CENTER, CENTER); text('Loading...', width/2, height/2); pop();
+    return;
+  }
+  
+  const photoName = manifest.photos[imgIndex];
+  const img = imgCache[photoName];
+  
+  if (img) {
+    image(img, 0, 0);
+  } else {
+    push(); 
+    fill(0); 
+    textAlign(CENTER, CENTER); 
     textSize(16);
-    text('Loading photos from assets/photos...', width / 2, height / 2);
+    text('Loading image...', width/2, height/2);
+    textSize(12);
+    text(`${photoName}`, width/2, height/2 + 25);
     pop();
     return;
   }
-
-  const current = photos[imgIndex];
-  image(current.photo, 0, 0);
-
-  // draw trees at planted points
-  if (plantedTrees && plantedTrees.length > 0 && current.points) {
-    // get planted point objects from indices
-    const plantedPoints = plantedTrees.map(idx => current.points[idx]);
-    // sort points by y-position (back to front) so closer trees draw on top
-    const sortedTrees = [...plantedPoints].sort((a, b) => a.y - b.y);
-    
-    for (let p of sortedTrees) {
+  
+  // Draw available points in red
+  const photoPoints = annotations && annotations.annotations ? 
+    annotations.annotations[photoName] : [];
+  
+  if (photoPoints && photoPoints.length > 0) {
+    for (let i = 0; i < photoPoints.length; i++) {
+      const p = photoPoints[i];
       push();
-      // map y-axis to scale: top of image (y=0) = 0.025, bottom of image (y=height) = 0.7
-      const depthScale = map(p.y, 0, current.photo.height, 0.025, 0.7);
-      const w = treeImg.width * depthScale;
-      const h = treeImg.height * depthScale;
-      // plant from bottom: top-left corner at (p.x - w/2, p.y - h) so bottom aligns with point
-      image(treeImg, p.x - w/2, p.y - h, w, h);
+      
+      // Check if this point has a tree planted
+      if (plantedTrees.includes(i)) {
+        // Draw tree
+        push();
+        imageMode(CENTER);
+        image(treeImg, p.x, p.y, treeImg.width * treeScale, treeImg.height * treeScale);
+        pop();
+      } else {
+        // Draw red dot for available points
+        fill(255, 0, 0, 100);
+        noStroke();
+        circle(p.x, p.y, 15);
+      }
+      
       pop();
     }
   }
+  
+  // Draw info overlay
+  push();
+  fill(0);
+  textSize(12);
+  textAlign(LEFT);
+  const info = `Trees planted: ${plantedTrees.length}/${photoPoints.length || 0}`;
+  text(info, 10, 20);
+  pop();
+}
 
-  // draw point markers for planted trees
-  if (plantedTrees && plantedTrees.length > 0 && current.points) {
-    push();
-    noFill();
-    stroke(255, 0, 0);
-    strokeWeight(2);
-    for (let i = 0; i < plantedTrees.length; i++) {
-      const p = current.points[plantedTrees[i]];
-      circle(p.x, p.y, 15);
-      fill(255);
-      textAlign(CENTER, CENTER);
-      textSize(10);
-      text(i + 1, p.x, p.y);
-      noFill();
+function mousePressed() {
+  if (mouseX < 0 || mouseY < 0 || mouseX > width || mouseY > height) return;
+  if (!manifest || !manifest.photos.length) return;
+  if (loading) return; // Don't allow clicks while loading
+  
+  const photoName = manifest.photos[imgIndex];
+  if (!imgCache[photoName]) return; // Don't allow clicks if image not loaded
+  
+  const photoPoints = annotations && annotations.annotations ? 
+    annotations.annotations[photoName] : [];
+  
+  if (!photoPoints || photoPoints.length === 0) return;
+  
+  // Find closest point to click
+  let closest = -1;
+  let closestDist = 50; // max click distance in pixels
+  
+  for (let i = 0; i < photoPoints.length; i++) {
+    if (plantedTrees.includes(i)) continue; // skip already planted
+    
+    const p = photoPoints[i];
+    const d = dist(mouseX, mouseY, p.x, p.y);
+    if (d < closestDist) {
+      closest = i;
+      closestDist = d;
     }
-    pop();
   }
 }
 
 function nextPhoto() {
-  imgIndex = Math.min(photos.length - 1, imgIndex + 1);
-  if (photos[imgIndex]) {
-    resizeCanvas(photos[imgIndex].photo.width, photos[imgIndex].photo.height);
-  }
-  plantedTrees = [];
-  usedPointIndices.clear();
-  updateInfo();
+  if (!manifest || !manifest.photos.length) return;
+  imgIndex = Math.min(manifest.photos.length - 1, imgIndex + 1);
+  loadCurrent();
 }
 
 function prevPhoto() {
+  if (!manifest || !manifest.photos.length) return;
   imgIndex = Math.max(0, imgIndex - 1);
-  if (photos[imgIndex]) {
-    resizeCanvas(photos[imgIndex].photo.width, photos[imgIndex].photo.height);
-  }
-  plantedTrees = [];
-  usedPointIndices.clear();
-  updateInfo();
+  loadCurrent();
 }
 
 function plantRandomTree() {
-  if (!photos[imgIndex] || !photos[imgIndex].points) return;
-  const current = photos[imgIndex];
-  const availableIndices = [];
-  // find all points that haven't been planted yet
-  for (let i = 0; i < current.points.length; i++) {
-    if (!usedPointIndices.has(i)) {
-      availableIndices.push(i);
+  if (!manifest || !manifest.photos.length) return;
+  
+  const photoName = manifest.photos[imgIndex];
+  const photoPoints = annotations && annotations.annotations ? 
+    annotations.annotations[photoName] : [];
+  
+  if (!photoPoints || photoPoints.length === 0) return;
+  
+  // Find available points (not yet planted)
+  const available = [];
+  for (let i = 0; i < photoPoints.length; i++) {
+    if (!plantedTrees.includes(i)) {
+      available.push(i);
     }
   }
-  if (availableIndices.length === 0) return; // no more points to plant
-  // select random unused point
-  const randomIdx = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+  
+  if (available.length === 0) return;
+  
+  // Plant at random available point
+  const randomIdx = available[Math.floor(Math.random() * available.length)];
   plantedTrees.push(randomIdx);
-  usedPointIndices.add(randomIdx);
 }
 
 function clearAllTrees() {
   plantedTrees = [];
-  usedPointIndices.clear();
 }
 
 function keyPressed() {
@@ -171,10 +239,13 @@ function keyPressed() {
 
 function updateInfo() {
   const info = document.getElementById('info');
-  if (!photos.length) {
+  if (!manifest || !manifest.photos.length) {
     info.textContent = 'Loading...';
   } else {
-    const current = photos[imgIndex];
-    info.textContent = `${imgIndex + 1}/${photos.length} — ${current.name} — ${plantedTrees.length} tree(s) planted`;
+    const photoName = manifest.photos[imgIndex];
+    const photoPoints = annotations && annotations.annotations ? 
+      annotations.annotations[photoName] : [];
+    const totalPoints = photoPoints ? photoPoints.length : 0;
+    info.textContent = `${imgIndex + 1}/${manifest.photos.length} — ${photoName} — ${plantedTrees.length}/${totalPoints} trees planted`;
   }
 }

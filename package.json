@@ -4,8 +4,9 @@
   "description": "A p5.js project with p5.play library support",
   "main": "index.html",
   "scripts": {
-    "start": "http-server -c-1 -o -p 8080",
-    "dev": "http-server -c-1 -o -p 8080"
+    "start": "npm run manifest && http-server -c-1 -o -p 8080",
+    "dev": "npm run manifest && http-server -c-1 -o -p 8080",
+    "manifest": "node generate-manifest.js"
   },
   "keywords": [
     "p5.js",

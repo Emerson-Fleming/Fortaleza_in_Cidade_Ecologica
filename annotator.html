@@ -9,16 +9,16 @@
   </head>
   <body>
     <div class="topbar">
-      <label class="file-label">Choose images
-        <input id="fileInput" type="file" accept="image/*" multiple>
-      </label>
-      <div class="buttons">
-        <button id="prevBtn">Prev (P)</button>
-        <button id="nextBtn">Next (N)</button>
+      <div class="controls">
+        <label for="photoSelect">Select Photo:</label>
+        <select id="photoSelect">
+          <option value="">Loading...</option>
+        </select>
+        <button id="saveBtn">Save (S)</button>
         <button id="undoBtn">Undo (Z)</button>
-        <button id="saveBtn">Save JSON (S)</button>
+        <button id="downloadBtn">Download All JSON (D)</button>
       </div>
-      <div id="info" class="info">No images loaded.</div>
+      <div id="info" class="info">Select a photo to begin...</div>
     </div>
 
     <div id="sketch-holder"></div>

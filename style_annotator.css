@@ -1,10 +1,10 @@
 body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
-.topbar { display:flex; align-items:center; gap:12px; padding:10px; background:#f3f3f3; border-bottom:1px solid #ddd; }
-.file-label { background:#007bff; color:#fff; padding:6px 10px; border-radius:4px; cursor:pointer; }
-.file-label input { display:none; }
-.buttons { display:flex; gap:6px; }
-.buttons button { padding:6px 8px; border-radius:4px; border:1px solid #bbb; background:#fff; cursor:pointer; }
-.info { margin-left:12px; color:#333; font-size:14px; }
+.topbar { display:flex; flex-direction: column; gap:8px; padding:10px; background:#f3f3f3; border-bottom:1px solid #ddd; }
+.controls { display:flex; align-items:center; gap:12px; flex-wrap: wrap; }
+.controls label { font-weight: bold; font-size: 14px; }
+.controls select { padding:6px 10px; border-radius:4px; border:1px solid #bbb; background:#fff; font-size:14px; min-width: 200px; }
+.controls button { padding:6px 12px; border-radius:4px; border:1px solid #bbb; background:#fff; cursor:pointer; font-size:14px; }
+.controls button:hover { background:#f0f0f0; }
+.info { color:#333; font-size:14px; padding: 4px 0; }
 #sketch-holder { display:flex; justify-content:center; align-items:center; padding:10px; }
 canvas { box-shadow:0 2px 6px rgba(0,0,0,0.15); max-width:100%; height:auto; }
-.hint { position:fixed; right:12px; bottom:12px; background:rgba(0,0,0,0.6); color:#fff; padding:8px 10px; border-radius:6px; font-size:13px; }
