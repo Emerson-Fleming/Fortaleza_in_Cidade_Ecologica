@@ -137,10 +137,14 @@ function draw() {
       
       // Check if this point has a tree planted
       if (plantedTrees.includes(i)) {
-        // Draw tree
+        // Perspective scale: 0.2 at top of image, 0.7 at bottom
+        const pScale = 0.2 + 0.5 * (p.y / height);
+        const tw = treeImg.width * pScale;
+        const th = treeImg.height * pScale;
+        // Draw tree anchored at bottom-center on the dot
         push();
-        imageMode(CENTER);
-        image(treeImg, p.x, p.y, treeImg.width * treeScale, treeImg.height * treeScale);
+        imageMode(CORNER);
+        image(treeImg, p.x - tw / 2, p.y - th, tw, th);
         pop();
       } else {
         // Draw red dot for available points
@@ -189,6 +193,10 @@ function mousePressed() {
       closest = i;
       closestDist = d;
     }
+  }
+
+  if (closest >= 0) {
+    plantedTrees.push(closest);
   }
 }
 
