@@ -6,23 +6,27 @@ class game_screen {
         let photosPath = 'assets/photos/';
 
         //sets duration in milliseconds
-        let t = 1000;
+        let t = 2000;
 
         this.setup = function () {
+            this.addImg();
+        }
+        
+        this.draw = function () {
             this.addImg();
         }
 
         this.addImg = function () {
             //create an if statement
-            if (i < 199) {
+            if (i < 198) {
                 i++;
             } else {
-                i = 1;
+                this.sceneManager.showScene(title_screen);
             }
 
             //concatenate a string to add dog image name
             img = createImg(photosPath + "E_" + i + ".png");
-            print(img)
+            print(img.width)
 
             //remove the image, specify duration using t, declared at top
             setTimeout(this.imgRemove(), t);
