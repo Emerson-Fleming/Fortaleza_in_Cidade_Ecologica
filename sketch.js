@@ -1,5 +1,6 @@
 let mgr;
 let streetImages = []; // Global array to store all preloaded street images
+let streetImageNames = [];
 let carnaubaImg, cajueiroImg, juazeiroImg, jucaImg, mororoImg, oitiImg;
 let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
 let photosPath = 'assets/photos/webp/';
@@ -41,18 +42,19 @@ function loadStreetImages() {
   
   for (let num of imageNumbers) {
     streetImages[i] = loadImage(photosPath + "E_" + num + ".webp");
+    streetImageNames[i] = "E_" + num + ".webp";
     i++;
   }
   print("streetImages loaded")
 }
 
 function loadTrees() {
-  carnaubaImg = loadImage('assets/trees/Carnauba_1000_FINAL.png', 'Carnauba Tree');
-  cajueiroImg = loadImage('assets/trees/Cajueiro_1000_FINAL.png', 'Cajueiro Tree');
-  juazeiroImg = loadImage('assets/trees/Juazeiro_1000_FINAL.png', 'Juazeiro Tree');
-  jucaImg = loadImage('assets/trees/Juca_1000_FINAL.png', 'Juca Tree');
-  mororoImg = loadImage('assets/trees/Mororo_1000_FINAL.png', 'Mororo Tree');
-  oitiImg = loadImage('assets/trees/Oiti_1000_FINAL.png', 'Oiti Tree');
+  carnaubaImg = loadImage('assets/trees/carnauba.png', 'Carnauba Tree');
+  cajueiroImg = loadImage('assets/trees/cajueiro.png', 'Cajueiro Tree');
+  juazeiroImg = loadImage('assets/trees/juazeiro.png', 'Juazeiro Tree');
+  jucaImg = loadImage('assets/trees/juca.png', 'Juca Tree');
+  mororoImg = loadImage('assets/trees/mororo.png', 'Mororo Tree');
+  oitiImg = loadImage('assets/trees/oiti.png', 'Oiti Tree');
   print("tree images loaded")
 }
 
@@ -64,4 +66,8 @@ function loadTreeButtons() {
   mororoBtn = loadImage('assets/tree_buttons/mororo_button.png', 'Mororo Button');
   oitiBtn = loadImage('assets/tree_buttons/oiti_button.png', 'Oiti Button');
   print("tree button images loaded")
+}
+
+function mousePressed() {
+    mgr.handleEvent("mousePressed");
 }

@@ -3,25 +3,39 @@ class game_screen {
         let i = 0;
         let t = 2000; // 2 seconds per image
 
+        this.buttons = [];
+
         this.setup = function () {
-            loadTrees();
             this.updateImage();
         }
 
         this.draw = function () {
             background(0);
-            // Use the global streetImages array preloaded in sketch.js
+
             if (streetImages[i]) {
                 imageMode(CORNER);
-                let scale = min(width / streetImages[i].width, height / streetImages[i].height);
-                image(streetImages[i], 0, 0, streetImages[i].width * scale, streetImages[i].height * scale);
+
+                let scale = min(
+                    width / streetImages[i].width,
+                    height / streetImages[i].height
+                );
+
+                image(
+                    streetImages[i],
+                    0,
+                    0,
+                    streetImages[i].width * scale,
+                    streetImages[i].height * scale
+                );
+
                 filter(GRAY);
+
                 this.drawTreeButtons();
             }
         }
 
         this.updateImage = function () {
-            if (i < streetImages.length) {
+            if (i < streetImages.length - 1) {
                 i++;
                 setTimeout(() => this.updateImage(), t);
             } else {
@@ -31,22 +45,51 @@ class game_screen {
         }
 
         this.drawTreeButtons = function () {
-            image(carnaubaBtn, 1 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
-            image(cajueiroBtn, 2 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
-            image(juazeiroBtn, 3 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
-            image(jucaBtn, 4 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
-            image(mororoBtn, 5 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
-            image(oitiBtn, 6 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
+            // build buttons once per image
+            this.buttons = [
+                { img: carnaubaBtn, tree: carnaubaImg, x: 1 * (streetImages[i].width / 8) - 200, y: streetImages[i].height - 200 },
+                { img: cajueiroBtn, tree: cajueiroImg, x: 2 * (streetImages[i].width / 8) - 200, y: streetImages[i].height - 200 },
+                { img: juazeiroBtn, tree: juazeiroImg, x: 3 * (streetImages[i].width / 8) - 200, y: streetImages[i].height - 200 },
+                { img: jucaBtn, tree: jucaImg, x: 4 * (streetImages[i].width / 8) - 200, y: streetImages[i].height - 200 },
+                { img: mororoBtn, tree: mororoImg, x: 5 * (streetImages[i].width / 8) - 200, y: streetImages[i].height - 200 },
+                { img: oitiBtn, tree: oitiImg, x: 6 * (streetImages[i].width / 8) - 200, y: streetImages[i].height - 200 }
+            ];
+
+            for (let b of this.buttons) {
+                image(b.img, b.x, b.y);
+            }
         }
 
-        function plantTree() {
-            //load points for tree planting from annotations.json
-            loadJSON('assets/annotations.json', (data) => {
+        this.mousePressed = function () {
+            for (let b of this.buttons) {
+                if (
+                    mouseX > b.x &&
+                    mouseX < b.x + b.img.width &&
+                    mouseY > b.y &&
+                    mouseY < b.y + b.img.height
+                ) {
+                    this.plantTree(b.tree);
+                }
+            }
+        }
+
+        this.plantTree = function (treeType) {
+            loadJSON('assets/json/annotations.json', (data) => {
                 let annotations = data.annotations;
-                let points = annotations[streetImages[i].name]
-                if (point) {
-                    // Plant the tree at the specified location
-                    image(carnaubaImg, point.x, point.y);
+                print(annotations);
+                let points = annotations[streetImageNames[i]]; // Use streetImageNames to get the correct key
+                print(points);
+
+                if (points && points.length > 0) {
+                    // find point with lowest Y value
+                    let lowestPoint = points.reduce(
+                        (lowest, p) => (p.y > lowest.y ? p : lowest),
+                        points[0]
+                    );
+
+                    image(treeType, lowestPoint.x, lowestPoint.y);
+                    print(treeType)
+                    print(lowestPoint);
                 }
             });
         }
