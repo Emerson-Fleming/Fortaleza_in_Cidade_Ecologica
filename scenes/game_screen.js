@@ -1,7 +1,5 @@
 class game_screen {
     constructor() {
-        let carnaubaImg, cajueiroImg, juazeiroImg, jucaImg, mororoImg, oitiImg;
-        let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
         let i = 0;
         let t = 2000; // 2 seconds per image
 
@@ -18,6 +16,7 @@ class game_screen {
                 let scale = min(width / streetImages[i].width, height / streetImages[i].height);
                 image(streetImages[i], 0, 0, streetImages[i].width * scale, streetImages[i].height * scale);
                 filter(GRAY);
+                this.drawTreeButtons();
             }
         }
 
@@ -31,22 +30,25 @@ class game_screen {
             }
         }
 
-        function loadTrees() {
-            carnaubaImg = loadImage('assets/trees/Carnauba_1000_FINAL.png');
-            cajueiroImg = loadImage('assets/trees/Cajueiro_1000_FINAL.png');
-            juazeiroImg = loadImage('assets/trees/Juazeiro_1000_FINAL.png');
-            jucaImg = loadImage('assets/trees/Juca_1000_FINAL.png');
-            mororoImg = loadImage('assets/trees/Mororo_1000_FINAL.png');
-            oitiImg = loadImage('assets/trees/Oiti_1000_FINAL.png');
+        this.drawTreeButtons = function () {
+            image(carnaubaBtn, 1 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
+            image(cajueiroBtn, 2 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
+            image(juazeiroBtn, 3 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
+            image(jucaBtn, 4 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
+            image(mororoBtn, 5 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
+            image(oitiBtn, 6 * (streetImages[i].width / 8) - 200, streetImages[i].height - 200);
         }
 
-        function drawTreeButtons() {
-            carnaubaBtn = createButton('Carnauba');
-            cajueiroBtn = createButton('Cajueiro');
-            juazeiroBtn = createButton('Juazeiro');
-            jucaBtn = createButton('Juca');
-            mororoBtn = createButton('Mororo');
-            oitiBtn = createButton('Oiti');
+        function plantTree() {
+            //load points for tree planting from annotations.json
+            loadJSON('assets/annotations.json', (data) => {
+                let annotations = data.annotations;
+                let points = annotations[streetImages[i].name]
+                if (point) {
+                    // Plant the tree at the specified location
+                    image(carnaubaImg, point.x, point.y);
+                }
+            });
         }
     }
 }
