@@ -22,10 +22,11 @@ class game_screen {
         }
 
         this.updateImage = function () {
-            if (i < 5) {
+            if (i < streetImages.length) {
                 i++;
                 setTimeout(() => this.updateImage(), t);
             } else {
+                i = 0;
                 this.sceneManager.showScene(title_screen);
             }
         }
