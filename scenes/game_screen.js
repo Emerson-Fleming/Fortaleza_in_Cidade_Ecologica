@@ -14,9 +14,9 @@ class game_screen {
             background(0);
             // Use the global streetImages array preloaded in sketch.js
             if (streetImages[i]) {
-                imageMode(CENTER);
+                imageMode(CORNER);
                 let scale = min(width / streetImages[i].width, height / streetImages[i].height);
-                image(streetImages[i], width / 2, height / 2, streetImages[i].width * scale, streetImages[i].height * scale);
+                image(streetImages[i], 0, 0, streetImages[i].width * scale, streetImages[i].height * scale);
                 filter(GRAY);
             }
         }
