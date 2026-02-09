@@ -15,7 +15,7 @@ class game_screen {
         this.draw = function () {
             background(0);
             if (img) {
-                imageMode(TOP);
+                imageMode(CENTER);
                 // Scale image to fit canvas while maintaining aspect ratio
                 let scale = min(width / img.width, height / img.height);
                 image(img, width / 2, height / 2, img.width * scale, img.height * scale);
