@@ -9,35 +9,41 @@ class game_screen {
         let t = 2000;
 
         this.setup = function () {
-            this.addImg();
-        }
-        
-        this.draw = function () {
-            this.addImg();
+            this.loadImg();
         }
 
-        this.addImg = function () {
+        this.draw = function () {
+            background(0);
+            if (img) {
+                imageMode(TOP);
+                // Scale image to fit canvas while maintaining aspect ratio
+                let scale = min(width / img.width, height / img.height);
+                image(img, width / 2, height / 2, img.width * scale, img.height * scale);
+            }
+        }
+
+        this.loadImg = function () {
             //create an if statement
             if (i < 198) {
                 i++;
             } else {
                 this.sceneManager.showScene(title_screen);
+                return;
             }
 
-            //concatenate a string to add dog image name
-            img = createImg(photosPath + "E_" + i + ".png");
-            print(img.width)
+            img = loadImage(photosPath + "E_" + i + ".png", 
+                () => {
+                    // Image loaded successfully
+                    print(i);
+                },
+                () => {
+                    // Image failed to load
+                    print("Failed to load image " + i);
+                }
+            );
 
-            //remove the image, specify duration using t, declared at top
-            setTimeout(this.imgRemove(), t);
-
-            //keep cycling every second, specify duration using t, declared at top
-            setTimeout(this.addImg(), t);
-            print(i);
-        }
-        this.imgRemove = function () {
-            //removes image
-            img.remove();
+            //keep cycling every 2 seconds
+            setTimeout(() => this.loadImg(), t);
         }
     }
 }
