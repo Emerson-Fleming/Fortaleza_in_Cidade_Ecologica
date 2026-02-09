@@ -1,6 +1,6 @@
 let mgr;
 let streetImages = []; // Global array to store all preloaded street images
-let photosPath = 'assets/photos/';
+let photosPath = 'assets/photos/webp/';
 
 function preload() {
   // Preload all 198 street images
@@ -20,7 +20,7 @@ function preload() {
   let i = 0;
   
   for (let num of imageNumbers) {
-    streetImages[i] = loadImage(photosPath + "E_" + num + ".png");
+    streetImages[i] = loadImage(photosPath + "E_" + num + ".webp");
     i++;
   }
   print("streetImages loaded")
