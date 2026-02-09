@@ -1,49 +1,51 @@
 class game_screen {
     constructor() {
-        //create a global img variable
-        let img;
-        let i = 1;
-        let photosPath = 'assets/photos/';
-
-        //sets duration in milliseconds
-        let t = 2000;
+        let carnaubaImg, cajueiroImg, juazeiroImg, jucaImg, mororoImg, oitiImg;
+        let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
+        let i = 0;
+        let t = 2000; // 2 seconds per image
 
         this.setup = function () {
-            this.loadImg();
+            loadTrees();
+            this.updateImage();
         }
 
         this.draw = function () {
             background(0);
-            if (img) {
+            // Use the global streetImages array preloaded in sketch.js
+            if (streetImages[i]) {
                 imageMode(CENTER);
-                // Scale image to fit canvas while maintaining aspect ratio
-                let scale = min(width / img.width, height / img.height);
-                image(img, width / 2, height / 2, img.width * scale, img.height * scale);
+                let scale = min(width / streetImages[i].width, height / streetImages[i].height);
+                image(streetImages[i], width / 2, height / 2, streetImages[i].width * scale, streetImages[i].height * scale);
+                filter(GRAY);
             }
         }
 
-        this.loadImg = function () {
-            //create an if statement
-            if (i < 198) {
+        this.updateImage = function () {
+            if (i < 5) {
                 i++;
+                setTimeout(() => this.updateImage(), t);
             } else {
                 this.sceneManager.showScene(title_screen);
-                return;
             }
+        }
 
-            img = loadImage(photosPath + "E_" + i + ".png", 
-                () => {
-                    // Image loaded successfully
-                    print(i);
-                },
-                () => {
-                    // Image failed to load
-                    print("Failed to load image " + i);
-                }
-            );
+        function loadTrees() {
+            carnaubaImg = loadImage('assets/trees/Carnauba_1000_FINAL.png');
+            cajueiroImg = loadImage('assets/trees/Cajueiro_1000_FINAL.png');
+            juazeiroImg = loadImage('assets/trees/Juazeiro_1000_FINAL.png');
+            jucaImg = loadImage('assets/trees/Juca_1000_FINAL.png');
+            mororoImg = loadImage('assets/trees/Mororo_1000_FINAL.png');
+            oitiImg = loadImage('assets/trees/Oiti_1000_FINAL.png');
+        }
 
-            //keep cycling every 2 seconds
-            setTimeout(() => this.loadImg(), t);
+        function drawTreeButtons() {
+            carnaubaBtn = createButton('Carnauba');
+            cajueiroBtn = createButton('Cajueiro');
+            juazeiroBtn = createButton('Juazeiro');
+            jucaBtn = createButton('Juca');
+            mororoBtn = createButton('Mororo');
+            oitiBtn = createButton('Oiti');
         }
     }
 }
