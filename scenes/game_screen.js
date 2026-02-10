@@ -128,34 +128,6 @@ class game_screen {
             let points = annotations[streetImageNames[i]]; // Use streetImageNames to get the correct key
             print('Points for', streetImageNames[i], ':', points);
 
-            //             //             if (points && points.length > 0) {
-            //                 // Find the next available point (not already planted)
-            //                 let availablePoints = points.filter((p, idx) => !plantedTrees.some(t => t.pointIndex === idx));
-
-            //                 if (availablePoints.length === 0) {
-            //                     print('All planting points used for this image');
-            //                     return;
-            //                 }
-
-            //                 // Get the first available point (or use lowest Y value logic)
-            //                 let selectedPoint = availablePoints[0];
-
-            //                 // Store the planted tree with original coordinates (will be scaled in draw)
-            //                 plantedTrees.push({
-            //                     img: button.tree,
-            //                     x: selectedPoint.x,
-            //                     y: selectedPoint.y,
-            //                     pointIndex: points.indexOf(selectedPoint)
-            //                 });
-
-            //                 print('Planted tree at:', selectedPoint);
-            //             } else {
-            //                 print('No planting points found for this image');
-            //             }
-            //         }
-            //     }
-            // }
-
             if (points && points.length > 0) {
                 let availablePoints = points.filter((p, idx) => !plantedTrees.some(t => t.pointIndex === idx));
                 
