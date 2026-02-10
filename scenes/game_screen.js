@@ -96,7 +96,7 @@ class game_screen {
             const buttonSize = 150;
             
             // Draw semi-transparent background for footer
-            fill(50);
+            fill(0);
             rect(0, footerStartY, width, height - footerStartY);
             
             // Just draw the buttons - don't recalculate positions
