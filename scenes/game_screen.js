@@ -64,28 +64,21 @@ class game_screen {
 
                 filter(GRAY);
 
-                // Draw available planting points as green dots
-                if (annotations) {
-                    let points = annotations[streetImageNames[i]];
-                    if (points && points.length > 0) {
-                        for (let p of points) {
-                            // Check if this point has already been planted
-                            let isPlanted = plantedTrees.some(t => t.x === p.x && t.y === p.y);
-
-                            if (!isPlanted) {
-                                fill(0, 255, 0); // Green
-                                noStroke();
-                                circle(p.x * scale, p.y * scale, 10); // 10px diameter dot
-                            }
-                        }
-                    }
-                }
-
                 // Draw planted trees on top (scaled to match the image)
                 for (let tree of plantedTrees) {
                     imageMode(CENTER);
                     // Scale tree position relative to the scaled image dimensions
-                    let treeScale = scale * 0.3; // Adjust 0.3 to make trees bigger/smaller
+                    //set treescale based on how far up the image the tree is planted - trees planted lower on the image should appear larger
+                    let minTreeScale = -0.5 * scale;
+                    let maxTreeScale = 0.8 * scale;
+
+                    let treeScale = map(
+                        tree.y,
+                        0,
+                        streetImages[i].height,
+                        minTreeScale,
+                        maxTreeScale
+                    );
                     let treeX = (tree.x * scale);
                     let treeY = (tree.y * scale) - (tree.offset * tree.img.height * treeScale);
                     image(tree.img, treeX, treeY, tree.img.width * treeScale, tree.img.height * treeScale);
