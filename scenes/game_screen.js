@@ -1,7 +1,7 @@
 class game_screen {
     constructor() {
         let i = 0;
-        let t = 2000; // 2 seconds per image
+        let t = 5000; // 10 seconds per image
         let plantedTrees = []; // array of planted tree objects: {img, x, y}
         let annotations = null; // store loaded annotations
         let buttonsInitialized = false; // flag to initialize buttons once
@@ -32,7 +32,7 @@ class game_screen {
                 const buttonY = footerStartY + (footerHeight - buttonSize) / 2;
 
                 this.buttons = [
-                    { img: carnaubaBtn, tree: carnaubaImg, x: startX + (0 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .3 },
+                    { img: carnaubaBtn, tree: carnaubaImg, x: startX + (0 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .4 },
                     { img: cajueiroBtn, tree: cajueiroImg, x: startX + (1 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .5 },
                     { img: juazeiroBtn, tree: juazeiroImg, x: startX + (2 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .5 },
                     { img: jucaBtn, tree: jucaImg, x: startX + (3 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .5 },
@@ -65,7 +65,7 @@ class game_screen {
                 filter(GRAY);
 
                 // Draw planted trees on top (scaled to match the image)
-                for (let tree of plantedTrees) {
+                for (let tree of plantedTrees.sort((a, b) => a.y - b.y)) { // sort trees by Y value for proper layering
                     imageMode(CENTER);
                     // Scale tree position relative to the scaled image dimensions
                     //set treescale based on how far up the image the tree is planted - trees planted lower on the image should appear larger
@@ -82,6 +82,8 @@ class game_screen {
                     let treeX = (tree.x * scale);
                     let treeY = (tree.y * scale) - (tree.offset * tree.img.height * treeScale);
                     image(tree.img, treeX, treeY, tree.img.width * treeScale, tree.img.height * treeScale);
+                    print('Width:' + tree.img.width * treeScale);
+                    print('Height:' + tree.img.height * treeScale);
                 }
 
                 const footerHeight = 250;
