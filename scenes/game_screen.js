@@ -4,6 +4,7 @@ class game_screen {
         let t = 2000; // 2 seconds per image
         let plantedTrees = []; // array of planted tree objects: {img, x, y}
         let annotations = null; // store loaded annotations
+        let buttonsInitialized = false; // flag to initialize buttons once
 
         this.buttons = [];
 
@@ -13,11 +14,33 @@ class game_screen {
                 annotations = data.annotations;
                 print('Annotations loaded:', annotations);
             });
+            
             this.updateImage();
         }
 
         this.draw = function () {
             background(0);
+
+            // Initialize buttons once on first draw (when canvas dimensions are stable)
+            if (!buttonsInitialized) {
+                const footerHeight = 250;
+                const buttonSize = 200;
+                const padding = 20;
+                const totalButtonWidth = (6 * (buttonSize + padding)) - padding;
+                const startX = (width - totalButtonWidth) / 2;
+                const footerStartY = height - footerHeight;
+                const buttonY = footerStartY + (footerHeight - buttonSize) / 2;
+                
+                this.buttons = [
+                    { img: carnaubaBtn, tree: carnaubaImg, x: startX + (0 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize },
+                    { img: cajueiroBtn, tree: cajueiroImg, x: startX + (1 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize },
+                    { img: juazeiroBtn, tree: juazeiroImg, x: startX + (2 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize },
+                    { img: jucaBtn, tree: jucaImg, x: startX + (3 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize },
+                    { img: mororoBtn, tree: mororoImg, x: startX + (4 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize },
+                    { img: oitiBtn, tree: oitiImg, x: startX + (5 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize }
+                ];
+                buttonsInitialized = true;
+            }
 
             if (streetImages[i]) {
                 imageMode(CORNER);
@@ -52,7 +75,9 @@ class game_screen {
                     image(tree.img, treeX, treeY, tree.img.width * treeScale, tree.img.height * treeScale);
                 }
 
-                this.drawTreeButtons(scale, scaledWidth, scaledHeight);
+                const footerHeight = 250;
+                const footerStartY = height - footerHeight;
+                this.drawTreeButtons(footerStartY);
             }
         }
 
@@ -67,19 +92,17 @@ class game_screen {
             }
         }
 
-        this.drawTreeButtons = function (scale, scaledWidth, scaledHeight) {
-            // Build buttons with scaled positions
-            this.buttons = [
-                { img: carnaubaBtn, tree: carnaubaImg, x: 1 * (scaledWidth / 8) - 200, y: scaledHeight - 200 },
-                { img: cajueiroBtn, tree: cajueiroImg, x: 2 * (scaledWidth / 8) - 200, y: scaledHeight - 200 },
-                { img: juazeiroBtn, tree: juazeiroImg, x: 3 * (scaledWidth / 8) - 200, y: scaledHeight - 200 },
-                { img: jucaBtn, tree: jucaImg, x: 4 * (scaledWidth / 8) - 200, y: scaledHeight - 200 },
-                { img: mororoBtn, tree: mororoImg, x: 5 * (scaledWidth / 8) - 200, y: scaledHeight - 200 },
-                { img: oitiBtn, tree: oitiImg, x: 6 * (scaledWidth / 8) - 200, y: scaledHeight - 200 }
-            ];
-
+        this.drawTreeButtons = function (footerStartY) {
+            const buttonSize = 150;
+            
+            // Draw semi-transparent background for footer
+            fill(50);
+            rect(0, footerStartY, width, height - footerStartY);
+            
+            // Just draw the buttons - don't recalculate positions
             for (let b of this.buttons) {
-                image(b.img, b.x, b.y);
+                imageMode(CORNER);
+                image(b.img, b.x, b.y, b.width, b.height);
             }
         }
 
@@ -87,9 +110,9 @@ class game_screen {
             for (let b of this.buttons) {
                 if (
                     mouseX > b.x &&
-                    mouseX < b.x + b.img.width &&
+                    mouseX < b.x + b.width &&
                     mouseY > b.y &&
-                    mouseY < b.y + b.img.height
+                    mouseY < b.y + b.height
                 ) {
                     this.plantTree(b);
                 }
@@ -105,30 +128,55 @@ class game_screen {
             let points = annotations[streetImageNames[i]]; // Use streetImageNames to get the correct key
             print('Points for', streetImageNames[i], ':', points);
 
+            //             //             if (points && points.length > 0) {
+            //                 // Find the next available point (not already planted)
+            //                 let availablePoints = points.filter((p, idx) => !plantedTrees.some(t => t.pointIndex === idx));
+
+            //                 if (availablePoints.length === 0) {
+            //                     print('All planting points used for this image');
+            //                     return;
+            //                 }
+
+            //                 // Get the first available point (or use lowest Y value logic)
+            //                 let selectedPoint = availablePoints[0];
+
+            //                 // Store the planted tree with original coordinates (will be scaled in draw)
+            //                 plantedTrees.push({
+            //                     img: button.tree,
+            //                     x: selectedPoint.x,
+            //                     y: selectedPoint.y,
+            //                     pointIndex: points.indexOf(selectedPoint)
+            //                 });
+
+            //                 print('Planted tree at:', selectedPoint);
+            //             } else {
+            //                 print('No planting points found for this image');
+            //             }
+            //         }
+            //     }
+            // }
+
             if (points && points.length > 0) {
-                // Find the next available point (not already planted)
                 let availablePoints = points.filter((p, idx) => !plantedTrees.some(t => t.pointIndex === idx));
                 
                 if (availablePoints.length === 0) {
                     print('All planting points used for this image');
                     return;
                 }
-
-                // Get the first available point (or use lowest Y value logic)
-                let selectedPoint = availablePoints[0];
                 
-                // Store the planted tree with original coordinates (will be scaled in draw)
+                // find point with lowest Y value
+                let lowestPoint = availablePoints.reduce(
+                    (lowest, p) => (p.y > lowest.y ? p : lowest),
+                    availablePoints[0]
+                );
                 plantedTrees.push({
                     img: button.tree,
-                    x: selectedPoint.x,
-                    y: selectedPoint.y,
-                    pointIndex: points.indexOf(selectedPoint)
+                    x: lowestPoint.x,
+                    y: lowestPoint.y,
+                    pointIndex: points.indexOf(lowestPoint)
                 });
-                
-                print('Planted tree at:', selectedPoint);
-            } else {
-                print('No planting points found for this image');
+                print(button);
             }
-        }
+        };
     }
 }
