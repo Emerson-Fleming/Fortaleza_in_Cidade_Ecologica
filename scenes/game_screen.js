@@ -65,7 +65,7 @@ class game_screen {
                 filter(GRAY);
 
                 // Draw planted trees on top (scaled to match the image)
-                for (let tree of plantedTrees.sort((a, b) => a.y - b.y)) { // sort trees by Y value for proper layering
+                for (let tree of plantedTrees.sort((a, b) => a.y - b.y).reverse()) { // sort trees by Y value for proper layering
                     imageMode(CENTER);
                     // Scale tree position relative to the scaled image dimensions
                     //set treescale based on how far up the image the tree is planted - trees planted lower on the image should appear larger
