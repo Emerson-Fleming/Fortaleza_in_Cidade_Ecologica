@@ -2,9 +2,9 @@ const fs = require('fs');
 const path = require('path');
 
 // Get all image files from the photos folder
-const photosDir = path.join(__dirname, 'assets', 'photos');
+const photosDir = path.join(__dirname, 'assets', 'photos', 'webp');
 const files = fs.readdirSync(photosDir)
-  .filter(file => /\.(png|jpg|jpeg|gif)$/i.test(file))
+  .filter(file => /\.(webp|png|jpg|jpeg|gif)$/i.test(file))
   .sort();
 
 const manifest = {
