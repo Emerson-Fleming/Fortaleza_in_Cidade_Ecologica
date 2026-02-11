@@ -65,7 +65,7 @@ class game_screen {
                 filter(GRAY);
 
                 // Draw planted trees on top (scaled to match the image)
-                for (let tree of plantedTrees.sort((a, b) => a.y - b.y).reverse()) { // sort trees by Y value for proper layering
+                for (let tree of plantedTrees.sort((a, b) => a.y - b.y)) { // sort trees by Y value descending (bottom to top) for proper layering
                     imageMode(CENTER);
                     // Scale tree position relative to the scaled image dimensions
                     //set treescale based on how far up the image the tree is planted - trees planted lower on the image should appear larger
@@ -82,8 +82,6 @@ class game_screen {
                     let treeX = (tree.x * scale);
                     let treeY = (tree.y * scale) - (tree.offset * tree.img.height * treeScale);
                     image(tree.img, treeX, treeY, tree.img.width * treeScale, tree.img.height * treeScale);
-                    print('Width:' + tree.img.width * treeScale);
-                    print('Height:' + tree.img.height * treeScale);
                 }
 
                 const footerHeight = 250;
