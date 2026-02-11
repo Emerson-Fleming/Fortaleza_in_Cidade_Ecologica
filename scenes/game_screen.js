@@ -143,17 +143,17 @@ class game_screen {
                     print('All planting points used for this image');
                     return;
                 }
-                // find point with lowest Y value
-                let lowestPoint = availablePoints.reduce(
-                    (lowest, p) => (p.y > lowest.y ? p : lowest),
+                // find point with lowest Y value (highest on screen)
+                let highestPoint = availablePoints.reduce(
+                    (highest, p) => (p.y < highest.y ? p : highest),
                     availablePoints[0]
                 );
                 plantedTrees.push({
                     img: button.tree,
-                    x: lowestPoint.x,
-                    y: lowestPoint.y,
+                    x: highestPoint.x,
+                    y: highestPoint.y,
                     offset: button.offset,
-                    pointIndex: points.indexOf(lowestPoint)
+                    pointIndex: points.indexOf(highestPoint)
                 });
                 print(button);
             }
