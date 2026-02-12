@@ -12,7 +12,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(1920, 1080);
   textFont('Press Start 2P');
   mgr = new SceneManager();
   mgr.wire();
