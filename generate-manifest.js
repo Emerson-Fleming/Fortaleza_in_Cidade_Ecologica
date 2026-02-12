@@ -5,7 +5,14 @@ const path = require('path');
 const photosDir = path.join(__dirname, 'assets', 'photos', 'webp');
 const files = fs.readdirSync(photosDir)
   .filter(file => /\.(webp|png|jpg|jpeg|gif)$/i.test(file))
-  .sort();
+  .sort((a, b) => {
+    const ma = a.match(/(\d+)/);
+    const mb = b.match(/(\d+)/);
+    const na = ma ? parseInt(ma[1], 10) : Infinity;
+    const nb = mb ? parseInt(mb[1], 10) : Infinity;
+    if (na !== nb) return na - nb;
+    return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+  });
 
 const manifest = {
   photos: files,
