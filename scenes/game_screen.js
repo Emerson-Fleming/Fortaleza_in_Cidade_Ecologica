@@ -20,15 +20,15 @@ class game_screen {
 
         this.draw = function () {
             background(0);
+            const footerHeight = 184;
+            const footerStartY = height - footerHeight;
 
             // Initialize buttons once on first draw (when canvas dimensions are stable)
             if (!buttonsInitialized) {
-                const footerHeight = 250;
-                const buttonSize = 200;
+                const buttonSize = 160;
                 const padding = 20;
                 const totalButtonWidth = (6 * (buttonSize + padding)) - padding;
                 const startX = (width - totalButtonWidth) / 2;
-                const footerStartY = height - footerHeight;
                 const buttonY = footerStartY + (footerHeight - buttonSize) / 2;
 
                 this.buttons = [
@@ -50,16 +50,11 @@ class game_screen {
                     height / streetImages[i].height
                 );
 
-                let scaledWidth = streetImages[i].width * scale;
-                let scaledHeight = streetImages[i].height * scale;
-
                 // Draw street image
                 image(
                     streetImages[i],
                     0,
-                    0,
-                    scaledWidth,
-                    scaledHeight
+                    0
                 );
 
                 filter(GRAY);
@@ -84,8 +79,6 @@ class game_screen {
                     image(tree.img, treeX, treeY, tree.img.width * treeScale, tree.img.height * treeScale);
                 }
 
-                const footerHeight = 250;
-                const footerStartY = height - footerHeight;
                 this.drawTreeButtons(footerStartY);
             }
         }
