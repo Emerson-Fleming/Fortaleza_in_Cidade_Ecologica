@@ -49,11 +49,11 @@ class title_screen {
     };
 
     this.mouseClicked = function () {
-      this.sceneManager.showScene(game_screen);
+      this.sceneManager.showScene(podium_screen);
     };
 
     this.keyPressed = function () {
-      this.sceneManager.showScene(game_screen);
+      this.sceneManager.showScene(podium_screen);
     };
   }
 }

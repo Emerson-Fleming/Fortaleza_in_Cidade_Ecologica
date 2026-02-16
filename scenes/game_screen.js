@@ -90,7 +90,7 @@ class game_screen {
                 setTimeout(() => this.updateImage(), t);
             } else {
                 i = 0;
-                this.sceneManager.showScene(title_screen);
+                this.sceneManager.showScene(podium_screen);
             }
         }
 
