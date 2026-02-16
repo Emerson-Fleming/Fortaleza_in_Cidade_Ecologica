@@ -1,17 +1,15 @@
 class game_screen {
     constructor() {
         let i = 0;
-        let t = 3000; // 3 seconds per image
-        let plantedTrees = []; // array of planted tree objects: {img, x, y}
-        let annotations = null; // store loaded annotations
-        let buttonsInitialized = false; // flag to initialize buttons once
-
+        let t = 100; // 3 seconds per image
+        let plantedTrees = [];
+        let annotations = null;
+        let buttonsInitialized = false;
         let carnaubaCount = 0, cajueiroCount = 0, juazeiroCount = 0, jucaCount = 0, mororoCount = 0, oitiCount = 0;
 
         this.buttons = [];
 
         this.setup = function () {
-            // Load annotations once at setup
             loadJSON('assets/json/annotations.json', (data) => {
                 annotations = data.annotations;
             });
@@ -24,7 +22,6 @@ class game_screen {
             const footerHeight = 184;
             const footerStartY = height - footerHeight;
 
-            // Initialize buttons once on first draw (when canvas dimensions are stable)
             if (!buttonsInitialized) {
                 const buttonSize = 160;
                 const padding = 20;
@@ -50,21 +47,14 @@ class game_screen {
                     width / streetImages[i].width,
                     height / streetImages[i].height
                 );
-
-                // Draw street image
                 image(
                     streetImages[i],
                     0,
                     0
                 );
-
                 filter(GRAY);
-
-                // Draw planted trees on top (scaled to match the image)
-                for (let tree of plantedTrees.sort((a, b) => a.y - b.y)) { // sort trees by Y value descending (bottom to top) for proper layering
+                for (let tree of plantedTrees.sort((a, b) => a.y - b.y)) {
                     imageMode(CENTER);
-                    // Scale tree position relative to the scaled image dimensions
-                    //set treescale based on how far up the image the tree is planted - trees planted lower on the image should appear larger
                     let minTreeScale = -0.5 * scale;
                     let maxTreeScale = 0.8 * scale;
 
@@ -85,22 +75,20 @@ class game_screen {
         }
 
         this.updateImage = function () {
-            plantedTrees = []; // reset planted trees for new image
+            plantedTrees = [];
             if (i < streetImages.length - 1) {
                 i++;
                 setTimeout(() => this.updateImage(), t);
             } else {
                 i = 0;
-                this.sceneManager.showScene(podium_screen);
+                this.sceneManager.showScene(podium_screen, this.getWinningTrees());
             }
         }
 
         this.drawTreeButtons = function (footerStartY) {
-            // Draw semi-transparent background for footer
             fill(0);
             rect(0, footerStartY, width, height - footerStartY);
 
-            // Just draw the buttons - don't recalculate positions
             for (let b of this.buttons) {
                 imageMode(CORNER);
                 image(b.img, b.x, b.y, b.width, b.height);
@@ -125,14 +113,13 @@ class game_screen {
                 return;
             }
 
-            let points = annotations[streetImageNames[i]]; // Use streetImageNames to get the correct key
+            let points = annotations[streetImageNames[i]];
 
             if (points && points.length > 0) {
                 let availablePoints = points.filter((p, idx) => !plantedTrees.some(t => t.pointIndex === idx));
                 if (availablePoints.length === 0) {
                     return;
                 }
-                // find point with lowest Y value (highest on screen)
                 let highestPoint = availablePoints.reduce(
                     (highest, p) => (p.y < highest.y ? p : highest),
                     availablePoints[0]
@@ -169,6 +156,22 @@ class game_screen {
                     oitiCount++;
                     break;
             }
+        }
+
+        this.getWinningTrees = function () {
+            const counts = [
+                { type: 'Carnauba', count: carnaubaCount },
+                { type: 'Cajueiro', count: cajueiroCount },
+                { type: 'Juazeiro', count: juazeiroCount },
+                { type: 'Juca', count: jucaCount },
+                { type: 'Mororo', count: mororoCount },
+                { type: 'Oiti', count: oitiCount }
+            ];
+
+            //sort counts by count descending
+            counts.sort((a, b) => b.count - a.count);
+
+            return counts.slice(0, 3);
         }
     }
 }
