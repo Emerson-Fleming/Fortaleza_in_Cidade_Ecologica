@@ -3,6 +3,7 @@ let streetImages = []; // Global array to store all preloaded street images
 let streetImageNames = [];
 let carnaubaImg, cajueiroImg, juazeiroImg, jucaImg, mororoImg, oitiImg;
 let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
+let menuCarnauba, menuCajueiro, menuJuazeiro, menuJuca, menuMororo, menuOiti;
 let photosPath = 'assets/game_screen/street_photos/';
 
 function preload() {
@@ -63,6 +64,15 @@ function loadTreeButtons() {
   jucaBtn = loadImage('assets/tree_buttons/juca_button.png', 'Juca Button');
   mororoBtn = loadImage('assets/tree_buttons/mororo_button.png', 'Mororo Button');
   oitiBtn = loadImage('assets/tree_buttons/oiti_button.png', 'Oiti Button');
+}
+
+function loadMenuTrees() {
+  menuCarnauba = loadImage('assets/menu_trees/menu_carnauba.png', 'Menu Carnauba');
+  menuCajueiro = loadImage('assets/menu_trees/menu_cajueiro.png', 'Menu Cajueiro');
+  menuJuazeiro = loadImage('assets/menu_trees/menu_juazeiro.png', 'Menu Juazeiro');
+  menuJuca = loadImage('assets/menu_trees/menu_juca.png', 'Menu Juca');
+  menuMororo = loadImage('assets/menu_trees/menu_mororo.png', 'Menu Mororo');
+  menuOiti = loadImage('assets/menu_trees/menu_oiti.png', 'Menu Oiti');
 }
 
 function mousePressed() {

@@ -160,13 +160,14 @@ class game_screen {
 
         this.getWinningTrees = function () {
             const counts = [
-                { type: 'Carnauba', count: carnaubaCount },
-                { type: 'Cajueiro', count: cajueiroCount },
-                { type: 'Juazeiro', count: juazeiroCount },
-                { type: 'Juca', count: jucaCount },
-                { type: 'Mororo', count: mororoCount },
-                { type: 'Oiti', count: oitiCount }
+                { type: 'Carnauba', tree_img: menuCarnauba, count: carnaubaCount },
+                { type: 'Cajueiro', tree_img: menuCajueiro, count: cajueiroCount },
+                { type: 'Juazeiro', tree_img: menuJuazeiro, count: juazeiroCount },
+                { type: 'Juca', tree_img: menuJuca, count: jucaCount },
+                { type: 'Mororo', tree_img: menuMororo, count: mororoCount },
+                { type: 'Oiti', tree_img: menuOiti, count: oitiCount }
             ];
+            print(counts)
 
             //sort counts by count descending
             counts.sort((a, b) => b.count - a.count);

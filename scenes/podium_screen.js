@@ -29,6 +29,12 @@ class podium_screen {
             let firstPlace = data[0];
             let secondPlace = data[1];
             let thirdPlace = data[2];
+            
+            //wip: gotta get the photos to line up with the podium
+            // imageMode(CENTER);
+            // image(firstPlace.tree_img, (width * .3) + 50, (height / 2) - 150);
+            // image(secondPlace.tree_img, (width * .5) + 50, (height / 2) - 100);
+            // image(thirdPlace.tree_img, (width * .7) + 25, (height / 2) - 50);
 
             // Display counts on podium
             fill(255);
