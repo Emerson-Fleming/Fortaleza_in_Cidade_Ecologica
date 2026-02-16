@@ -56,6 +56,9 @@ class info_screen {
                     mouseY > btn.y - textHeight / 2 &&
                     mouseY < btn.y + textHeight / 2) {
                     selectedOption = btn.index;
+                    if(selectedOption === 2) {
+                        this.sceneManager.showScene(game_screen);
+                    }
                     break;
                 }
             }
