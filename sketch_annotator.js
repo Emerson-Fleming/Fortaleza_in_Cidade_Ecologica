@@ -14,6 +14,7 @@ function setup() {
   cnv = createCanvas(800, 600);
   cnv.parent(holder);
   background(240);
+  textFont('Press Start 2P');
 
   // Load saved annotations from localStorage
   const saved = localStorage.getItem('treeAnnotations');

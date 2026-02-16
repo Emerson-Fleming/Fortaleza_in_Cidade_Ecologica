@@ -14,7 +14,7 @@ class game_screen {
                 annotations = data.annotations;
                 print('Annotations loaded:', annotations);
             });
-
+            textFont('Press Start 2P');
             this.updateImage();
         }
 
@@ -95,8 +95,6 @@ class game_screen {
         }
 
         this.drawTreeButtons = function (footerStartY) {
-            const buttonSize = 150;
-
             // Draw semi-transparent background for footer
             fill(0);
             rect(0, footerStartY, width, height - footerStartY);

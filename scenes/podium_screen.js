@@ -6,6 +6,7 @@ class podium_screen {
         let podiumPath = 'podium_screen/'
         this.setup = function () {
             this.preload();
+            textFont('Press Start 2P');
         }
 
         this.preload = function () {

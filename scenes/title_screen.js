@@ -7,6 +7,7 @@ class title_screen {
 
     this.setup = function () {
       this.preload();
+      textFont('Press Start 2P');
     };
 
     this.preload = function () {
@@ -49,11 +50,11 @@ class title_screen {
     };
 
     this.mouseClicked = function () {
-      this.sceneManager.showScene(podium_screen);
+      this.sceneManager.showScene(info_screen);
     };
 
     this.keyPressed = function () {
-      this.sceneManager.showScene(podium_screen);
+      this.sceneManager.showScene(info_screen);
     };
   }
 }

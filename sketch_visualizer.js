@@ -25,6 +25,7 @@ function setup() {
   const holder = document.getElementById('sketch-holder');
   cnv = createCanvas(800, 600);
   cnv.parent(holder);
+  textFont('Press Start 2P');
 
   // hooks
   document.getElementById('nextBtn').addEventListener('click', nextPhoto);
