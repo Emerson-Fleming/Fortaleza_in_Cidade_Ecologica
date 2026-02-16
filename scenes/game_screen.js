@@ -1,7 +1,7 @@
 class game_screen {
     constructor() {
         let i = 0;
-        let t = 5000; // 10 seconds per image
+        let t = 3000; // 3 seconds per image
         let plantedTrees = []; // array of planted tree objects: {img, x, y}
         let annotations = null; // store loaded annotations
         let buttonsInitialized = false; // flag to initialize buttons once
