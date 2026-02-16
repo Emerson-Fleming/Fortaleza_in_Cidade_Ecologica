@@ -61,7 +61,7 @@ function loadSelectedPhoto() {
   }
 
   currentPhoto = photoName;
-  const photoPath = 'assets/photos/webp/' + photoName;
+  const photoPath = 'assets/game_screen/street_photos/' + photoName;
   
   // Load existing points for this photo
   points = allAnnotations[photoName] ? [...allAnnotations[photoName]] : [];

@@ -3,7 +3,7 @@ let streetImages = []; // Global array to store all preloaded street images
 let streetImageNames = [];
 let carnaubaImg, cajueiroImg, juazeiroImg, jucaImg, mororoImg, oitiImg;
 let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
-let photosPath = 'assets/photos/webp/';
+let photosPath = 'assets/game_screen/street_photos/';
 
 function preload() {
   loadStreetImages();
