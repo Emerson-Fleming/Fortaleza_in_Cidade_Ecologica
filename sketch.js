@@ -45,7 +45,6 @@ function loadStreetImages() {
     streetImageNames[i] = "E_" + num + ".webp";
     i++;
   }
-  print("streetImages loaded")
 }
 
 function loadTrees() {
@@ -55,7 +54,6 @@ function loadTrees() {
   jucaImg = loadImage('assets/trees/juca.png', 'Juca Tree');
   mororoImg = loadImage('assets/trees/mororo.png', 'Mororo Tree');
   oitiImg = loadImage('assets/trees/oiti.png', 'Oiti Tree');
-  print("tree images loaded")
 }
 
 function loadTreeButtons() {
@@ -65,7 +63,6 @@ function loadTreeButtons() {
   jucaBtn = loadImage('assets/tree_buttons/juca_button.png', 'Juca Button');
   mororoBtn = loadImage('assets/tree_buttons/mororo_button.png', 'Mororo Button');
   oitiBtn = loadImage('assets/tree_buttons/oiti_button.png', 'Oiti Button');
-  print("tree button images loaded")
 }
 
 function mousePressed() {

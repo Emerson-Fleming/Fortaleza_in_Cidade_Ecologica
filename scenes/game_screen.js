@@ -6,13 +6,14 @@ class game_screen {
         let annotations = null; // store loaded annotations
         let buttonsInitialized = false; // flag to initialize buttons once
 
+        let carnaubaCount = 0, cajueiroCount = 0, juazeiroCount = 0, jucaCount = 0, mororoCount = 0, oitiCount = 0;
+
         this.buttons = [];
 
         this.setup = function () {
             // Load annotations once at setup
             loadJSON('assets/json/annotations.json', (data) => {
                 annotations = data.annotations;
-                print('Annotations loaded:', annotations);
             });
             textFont('Press Start 2P');
             this.updateImage();
@@ -121,17 +122,14 @@ class game_screen {
 
         this.plantTree = function (button) {
             if (!annotations) {
-                print('Annotations not loaded yet');
                 return;
             }
 
             let points = annotations[streetImageNames[i]]; // Use streetImageNames to get the correct key
-            print('Points for', streetImageNames[i], ':', points);
 
             if (points && points.length > 0) {
                 let availablePoints = points.filter((p, idx) => !plantedTrees.some(t => t.pointIndex === idx));
                 if (availablePoints.length === 0) {
-                    print('All planting points used for this image');
                     return;
                 }
                 // find point with lowest Y value (highest on screen)
@@ -146,8 +144,31 @@ class game_screen {
                     offset: button.offset,
                     pointIndex: points.indexOf(highestPoint)
                 });
-                print(button);
+                this.countTrees(button.tree);
             }
         };
+
+        this.countTrees = function (tree) {
+            switch (tree) {
+                case carnaubaImg:
+                    carnaubaCount++;
+                    break;
+                case cajueiroImg:
+                    cajueiroCount++;
+                    break;
+                case juazeiroImg:
+                    juazeiroCount++;
+                    break;
+                case jucaImg:
+                    jucaCount++;
+                    break;
+                case mororoImg:
+                    mororoCount++;
+                    break;
+                case oitiImg:
+                    oitiCount++;
+                    break;
+            }
+        }
     }
 }
