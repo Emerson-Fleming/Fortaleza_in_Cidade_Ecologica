@@ -17,7 +17,9 @@ class info_screen {
         this.draw = function () {
             background(backgroundImg);
             this.drawOptionsMenu();
-            //this.drawTreeSelection();
+            if (selectedOption === 0) {
+                this.drawTreeSelection();
+            }
         }
 
         this.drawOptionsMenu = function () {
@@ -48,7 +50,7 @@ class info_screen {
                     mouseY > btn.y - textHeight / 2 &&
                     mouseY < btn.y + textHeight / 2) {
                     selectedOption = btn.index;
-                    if(selectedOption === 2) {
+                    if (selectedOption === 2) {
                         this.sceneManager.showScene(game_screen);
                     }
                     break;
@@ -57,7 +59,10 @@ class info_screen {
         }
 
         this.drawTreeSelection = function () {
-            imageMode(CENTER);
+            push();
+            imageMode(CORNER);
+            textAlign(CENTER, TOP);
+
             let treeOptions = [
                 { img: menuMororo, label: 'Mororò' },
                 { img: menuCarnauba, label: 'Carnaúba' },
@@ -66,23 +71,32 @@ class info_screen {
                 { img: menuJuca, label: 'Juca' },
                 { img: menuOiti, label: 'Oiti' }
             ];
-            //next to the options menu, display the tree options in a 2x3 grid, with the names right below each tree
-            let gridX = width / 2;
-            let gridY = height / 3;
-            let spacingX = 150;
-            let spacingY = 150;
+
+            let imgSize = menuMororo.width;
+            let labelHeight = 50;
+            let paddingX = 80;
+            let paddingY = 70;
+            let cols = 3;
+            let cellW = imgSize + paddingX;
+            let cellH = imgSize + labelHeight + paddingY;
+
+            // The options menu occupies ~1/3 of the screen, so the grid starts at 1/3 and spans 2/3
+            let gridAreaStartX = width * .3;
+            let gridAreaWidth = width * 2 / 3;
+            let gridTotalW = cols * cellW - paddingX;
+            let gridStartX = gridAreaStartX + (gridAreaWidth - gridTotalW) / 2;
+            let gridStartY = height / 2 - cellH;
 
             for (let i = 0; i < treeOptions.length; i++) {
-                let row = floor(i / 3);
-                let col = i % 3;
-                let x = gridX + col * spacingX - spacingX;
-                let y = gridY + row * spacingY - spacingY / 2;
+                let row = floor(i / cols);
+                let col = i % cols;
+                let x = gridStartX + col * cellW;
+                let y = gridStartY + row * cellH;
 
-                image(treeOptions[i].img, x, y, 100, 100);
-                textSize(16);
+                image(treeOptions[i].img, x, y, imgSize, imgSize);
+                textSize(24);
                 fill(255);
-                textAlign(CENTER, TOP);
-                text(treeOptions[i].label, x, y + 50);
+                text(treeOptions[i].label, x + imgSize / 2, y + imgSize + 10);
             }
             pop();
         }
