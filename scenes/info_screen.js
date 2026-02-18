@@ -8,9 +8,9 @@ class info_screen {
         this.setup = function () {
             // Initialize button positions
             buttons = [
-                { label: 'INTRODUCING\nOUR STARS', x: width / 8, y: height / 3, index: 0 },
-                { label: 'HOW TO PLAY', x: width / 8, y: height / 2, index: 1 },
-                { label: 'START GAME', x: width / 8, y: height * 2 / 3, index: 2 }
+                { label: 'INTRODUCING\nOUR STARS', x: width / 10, y: height / 3, index: 0 },
+                { label: 'HOW TO PLAY', x: width / 10, y: height / 2, index: 1 },
+                { label: 'START GAME', x: width / 10, y: height * 2 / 3, index: 2 }
             ];
         }
 
@@ -19,6 +19,8 @@ class info_screen {
             this.drawOptionsMenu();
             if (selectedOption === 0) {
                 this.drawTreeSelection();
+            } else if (selectedOption === 1) {
+                this.drawHowToPlay();
             }
         }
 
@@ -81,7 +83,7 @@ class info_screen {
             let cellH = imgSize + labelHeight + paddingY;
 
             // The options menu occupies ~1/3 of the screen, so the grid starts at 1/3 and spans 2/3
-            let gridAreaStartX = width * .3;
+            let gridAreaStartX = width * .25;
             let gridAreaWidth = width * 2 / 3;
             let gridTotalW = cols * cellW - paddingX;
             let gridStartX = gridAreaStartX + (gridAreaWidth - gridTotalW) / 2;
@@ -102,6 +104,36 @@ class info_screen {
         }
 
         this.drawHowToPlay = function () {
+            push();
+
+            // Match the same area as the tree grid
+            let imgSize = menuMororo.width;
+            let labelHeight = 50;
+            let paddingX = 80;
+            let paddingY = 70;
+            let cols = 3;
+            let rows = 2;
+            let cellW = imgSize + paddingX;
+            let cellH = imgSize + labelHeight + paddingY;
+            let gridAreaStartX = width * 0.3;
+            let gridAreaWidth = width * 2 / 3;
+            let gridTotalW = cols * cellW - paddingX;
+            let boxX = gridAreaStartX + (gridAreaWidth - gridTotalW) / 2;
+            let boxY = height / 2 - cellH;
+            let boxW = gridTotalW;
+            let boxH = rows * cellH - paddingY;
+
+            let howToPlayText = "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat. consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat.consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua.";
+
+            textFont(font);
+            textSize(24);
+            textAlign(LEFT, CENTER);
+            textWrap(WORD);
+            fill(255);
+            textLeading(30);
+            text(howToPlayText, boxX, boxY, boxW, boxH);
+
+            pop();
         }
     }
 }
