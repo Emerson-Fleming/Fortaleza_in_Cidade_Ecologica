@@ -130,7 +130,7 @@ class info_screen {
             textAlign(LEFT, CENTER);
             textWrap(WORD);
             fill(255);
-            textLeading(30);
+            textLeading(50);
             text(howToPlayText, boxX, boxY, boxW, boxH);
 
             pop();
