@@ -4,17 +4,21 @@ let streetImageNames = [];
 let carnaubaImg, cajueiroImg, juazeiroImg, jucaImg, mororoImg, oitiImg;
 let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
 let menuCarnauba, menuCajueiro, menuJuazeiro, menuJuca, menuMororo, menuOiti;
+let backgroundImg;
+let font;
 let photosPath = 'assets/game_screen/street_photos/';
 
 function preload() {
   loadStreetImages();
   loadTrees();
   loadTreeButtons();
+  loadMenuTrees();
+  loadBackgroundAndFont();
 }
 
 function setup() {
   createCanvas(1920, 1080);
-  textFont('Press Start 2P');
+  textFont(font);
   mgr = new SceneManager();
   mgr.wire();
   mgr.showScene(title_screen);
@@ -73,6 +77,11 @@ function loadMenuTrees() {
   menuJuca = loadImage('assets/menu_trees/menu_juca.png', 'Menu Juca');
   menuMororo = loadImage('assets/menu_trees/menu_mororo.png', 'Menu Mororo');
   menuOiti = loadImage('assets/menu_trees/menu_oiti.png', 'Menu Oiti');
+}
+
+function loadBackgroundAndFont() {
+  backgroundImg = loadImage('assets/background.png');
+  font = loadFont('assets/fonts/PressStart2P.ttf');
 }
 
 function mousePressed() {

@@ -40,7 +40,7 @@ function loadCurrent() {
   if (!manifest || !manifest.photos.length) return;
   
   const photoName = manifest.photos[imgIndex];
-  const photoPath = 'assets/photos/' + photoName;
+  const photoPath = 'assets/game_screen/street_photos/' + photoName;
   
   // Clean up cache
   cleanCache();
@@ -94,7 +94,7 @@ function preloadNearby() {
       const photoName = manifest.photos[idx];
       if (!imgCache[photoName] && !preloading.has(photoName)) {
         preloading.add(photoName);
-        const photoPath = 'assets/photos/' + photoName;
+        const photoPath = 'assets/game_screen/street_photos/' + photoName;
         loadImage(photoPath, (img) => {
           imgCache[photoName] = img;
           preloading.delete(photoName);

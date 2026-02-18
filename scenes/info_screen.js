@@ -1,15 +1,11 @@
 class info_screen {
     constructor() {
-        let backgroundImg;
         let assetPath = 'assets/';
-        let font;
+        let menuTreePath = assetPath + 'menu_trees/';
         let selectedOption = 0; // 0: INTRODUCING OUR STARS, 1: HOW TO PLAY, 2: START GAME
         let buttons = [];
 
         this.setup = function () {
-            this.preload();
-            textFont(font);
-
             // Initialize button positions
             buttons = [
                 { label: 'INTRODUCING\nOUR STARS', x: width / 8, y: height / 3, index: 0 },
@@ -18,14 +14,10 @@ class info_screen {
             ];
         }
 
-        this.preload = function () {
-            backgroundImg = loadImage(assetPath + 'background.png');
-            font = loadFont(assetPath + 'fonts/PressStart2P.ttf');
-        }
-
         this.draw = function () {
             background(backgroundImg);
             this.drawOptionsMenu();
+            //this.drawTreeSelection();
         }
 
         this.drawOptionsMenu = function () {
@@ -64,8 +56,35 @@ class info_screen {
             }
         }
 
-        this.drawOurStars = function () {
+        this.drawTreeSelection = function () {
+            imageMode(CENTER);
+            let treeOptions = [
+                { img: menuMororo, label: 'Mororò' },
+                { img: menuCarnauba, label: 'Carnaúba' },
+                { img: menuJuazeiro, label: 'Juazeiro' },
+                { img: menuCajueiro, label: 'Cajueiro' },
+                { img: menuJuca, label: 'Juca' },
+                { img: menuOiti, label: 'Oiti' }
+            ];
+            //next to the options menu, display the tree options in a 2x3 grid, with the names right below each tree
+            let gridX = width / 2;
+            let gridY = height / 3;
+            let spacingX = 150;
+            let spacingY = 150;
 
+            for (let i = 0; i < treeOptions.length; i++) {
+                let row = floor(i / 3);
+                let col = i % 3;
+                let x = gridX + col * spacingX - spacingX;
+                let y = gridY + row * spacingY - spacingY / 2;
+
+                image(treeOptions[i].img, x, y, 100, 100);
+                textSize(16);
+                fill(255);
+                textAlign(CENTER, TOP);
+                text(treeOptions[i].label, x, y + 50);
+            }
+            pop();
         }
 
         this.drawHowToPlay = function () {

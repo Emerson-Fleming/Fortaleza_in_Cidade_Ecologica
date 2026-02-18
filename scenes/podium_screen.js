@@ -1,11 +1,11 @@
 class podium_screen {
     constructor() { 
-        let backgroundImg;
+        //let backgroundImg;
         let podiumImg;
         let assetPath = 'assets/';
         let podiumPath = 'podium_screen/'
         let data;
-        let font;
+        //let font;
         this.setup = function () {
             this.preload();
             data = this.sceneArgs;
@@ -14,9 +14,9 @@ class podium_screen {
         }
 
         this.preload = function () {
-            backgroundImg = loadImage(assetPath + 'background.png');
+            //backgroundImg = loadImage(assetPath + 'background.png');
             podiumImg = loadImage(assetPath + podiumPath + 'podium.png');
-            font = loadFont(assetPath + 'fonts/PressStart2P.ttf');
+            //font = loadFont(assetPath + 'fonts/PressStart2P.ttf');
         }
 
         this.draw = function () {
