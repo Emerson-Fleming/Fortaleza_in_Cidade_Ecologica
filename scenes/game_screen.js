@@ -6,6 +6,10 @@ class game_screen {
         let annotations = null;
         let buttonsInitialized = false;
         let carnaubaCount = 0, cajueiroCount = 0, juazeiroCount = 0, jucaCount = 0, mororoCount = 0, oitiCount = 0;
+        let paused = false;
+        let pauseImg, playImg;
+        let pauseBtn = { x: 0, y: 0, width: 0, height: 0 };
+        let pendingTimeout = null;
 
         this.buttons = [];
 
@@ -13,6 +17,8 @@ class game_screen {
             loadJSON('assets/json/annotations.json', (data) => {
                 annotations = data.annotations;
             });
+            pauseImg = loadImage('assets/game_screen/pause.png');
+            playImg = loadImage('assets/game_screen/pause.png'); // replaced below if a play asset exists
             textFont('Press Start 2P');
             this.updateImage();
         }
@@ -37,39 +43,36 @@ class game_screen {
                     { img: mororoBtn, tree: mororoImg, x: startX + (4 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .4 },
                     { img: oitiBtn, tree: oitiImg, x: startX + (5 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .5 }
                 ];
+
+                // Pause button: left side of footer
+                const btnSize = 80;
+                pauseBtn = {
+                    x: 40,
+                    y: footerStartY + (footerHeight - btnSize) / 2,
+                    width: btnSize,
+                    height: btnSize
+                };
+
                 buttonsInitialized = true;
             }
 
             if (streetImages[i]) {
                 imageMode(CORNER);
-
                 let scale = min(
                     width / streetImages[i].width,
                     height / streetImages[i].height
                 );
-                image(
-                    streetImages[i],
-                    0,
-                    0
-                );
+                image(streetImages[i], 0, 0);
                 filter(GRAY);
                 for (let tree of plantedTrees.sort((a, b) => a.y - b.y)) {
                     imageMode(CENTER);
                     let minTreeScale = -0.5 * scale;
                     let maxTreeScale = 0.8 * scale;
-
-                    let treeScale = map(
-                        tree.y,
-                        0,
-                        streetImages[i].height,
-                        minTreeScale,
-                        maxTreeScale
-                    );
+                    let treeScale = map(tree.y, 0, streetImages[i].height, minTreeScale, maxTreeScale);
                     let treeX = (tree.x * scale);
                     let treeY = (tree.y * scale) - (tree.offset * tree.img.height * treeScale);
                     image(tree.img, treeX, treeY, tree.img.width * treeScale, tree.img.height * treeScale);
                 }
-
                 this.drawTreeButtons(footerStartY);
             }
         }
@@ -78,7 +81,7 @@ class game_screen {
             plantedTrees = [];
             if (i < streetImages.length - 1) {
                 i++;
-                setTimeout(() => this.updateImage(), t);
+                pendingTimeout = setTimeout(() => this.updateImage(), t);
             } else {
                 i = 0;
                 this.sceneManager.showScene(podium_screen, this.getWinningTrees());
@@ -89,6 +92,23 @@ class game_screen {
             fill(0);
             rect(0, footerStartY, width, height - footerStartY);
 
+            // Draw pause/play button on the left
+            imageMode(CORNER);
+            if (pauseImg) {
+                if (paused) {
+                    // Draw a simple play triangle when paused
+                    fill(255);
+                    noStroke();
+                    triangle(
+                        pauseBtn.x + pauseBtn.width * 0.2, pauseBtn.y + pauseBtn.height * 0.1,
+                        pauseBtn.x + pauseBtn.width * 0.2, pauseBtn.y + pauseBtn.height * 0.9,
+                        pauseBtn.x + pauseBtn.width * 0.9, pauseBtn.y + pauseBtn.height * 0.5
+                    );
+                } else {
+                    image(pauseImg, pauseBtn.x, pauseBtn.y, pauseBtn.width, pauseBtn.height);
+                }
+            }
+
             for (let b of this.buttons) {
                 imageMode(CORNER);
                 image(b.img, b.x, b.y, b.width, b.height);
@@ -96,6 +116,23 @@ class game_screen {
         }
 
         this.mousePressed = function () {
+            // Check pause button
+            if (mouseX > pauseBtn.x && mouseX < pauseBtn.x + pauseBtn.width &&
+                mouseY > pauseBtn.y && mouseY < pauseBtn.y + pauseBtn.height) {
+                paused = !paused;
+                if (!paused) {
+                    // Resume: restart the countdown for the current image
+                    pendingTimeout = setTimeout(() => this.updateImage(), t);
+                } else {
+                    // Pause: cancel the pending timeout
+                    clearTimeout(pendingTimeout);
+                }
+                return;
+            }
+
+            // Only allow tree planting when not paused
+            if (paused) return;
+
             for (let b of this.buttons) {
                 if (
                     mouseX > b.x &&
