@@ -11,6 +11,14 @@ class game_screen {
         let pauseBtn = { x: 0, y: 0, width: 0, height: 0 };
         let pendingTimeout = null;
 
+        // Pause menu options
+        const pauseMenuItems = [
+            { label: 'RESUME',         action: 'resume' },
+            { label: 'TITLE SCREEN',   action: 'title'  },
+            { label: 'END GAME',       action: 'end'    }
+        ];
+        let pauseMenuRects = []; // computed hit areas
+
         this.buttons = [];
 
         this.setup = function () {
@@ -74,6 +82,10 @@ class game_screen {
                     image(tree.img, treeX, treeY, tree.img.width * treeScale, tree.img.height * treeScale);
                 }
                 this.drawTreeButtons(footerStartY);
+
+                if (paused) {
+                    this.drawPauseMenu();
+                }
             }
         }
 
@@ -115,24 +127,108 @@ class game_screen {
             }
         }
 
-        this.mousePressed = function () {
-            // Check pause button
-            if (mouseX > pauseBtn.x && mouseX < pauseBtn.x + pauseBtn.width &&
-                mouseY > pauseBtn.y && mouseY < pauseBtn.y + pauseBtn.height) {
-                paused = !paused;
-                if (!paused) {
-                    // Resume: restart the countdown for the current image
-                    pendingTimeout = setTimeout(() => this.updateImage(), t);
+        this.drawPauseMenu = function () {
+            push();
+
+            // Dim the screen
+            fill(0, 0, 0, 160);
+            noStroke();
+            rect(0, 0, width, height);
+
+            // Menu box
+            const boxW = 600;
+            const boxH = 420;
+            const boxX = (width - boxW) / 2;
+            const boxY = (height - boxH) / 2;
+
+            fill(20);
+            stroke(255);
+            strokeWeight(3);
+            rect(boxX, boxY, boxW, boxH, 16);
+
+            // Title
+            noStroke();
+            fill(255);
+            textFont(font);
+            textSize(32);
+            textAlign(CENTER, TOP);
+            text('PAUSED', width / 2, boxY + 40);
+
+            // Menu items
+            pauseMenuRects = [];
+            const itemH = 60;
+            const itemSpacing = 24;
+            const startY = boxY + 130;
+
+            for (let idx = 0; idx < pauseMenuItems.length; idx++) {
+                const item = pauseMenuItems[idx];
+                const itemY = startY + idx * (itemH + itemSpacing);
+                const itemX = boxX + 60;
+                const itemW = boxW - 120;
+
+                pauseMenuRects.push({ x: itemX, y: itemY, w: itemW, h: itemH, action: item.action });
+
+                // Highlight on hover
+                const hovered = mouseX > itemX && mouseX < itemX + itemW &&
+                                 mouseY > itemY && mouseY < itemY + itemH;
+
+                if (hovered) {
+                    fill(0, 176, 0);
                 } else {
-                    // Pause: cancel the pending timeout
-                    clearTimeout(pendingTimeout);
+                    fill(50);
+                }
+                noStroke();
+                rect(itemX, itemY, itemW, itemH, 8);
+
+                fill(255);
+                textSize(22);
+                textAlign(CENTER, CENTER);
+                text(item.label, itemX + itemW / 2, itemY + itemH / 2);
+            }
+
+            pop();
+        }
+
+        this.mousePressed = function () {
+            // If paused, check pause menu item clicks first
+            if (paused) {
+                for (let r of pauseMenuRects) {
+                    if (mouseX > r.x && mouseX < r.x + r.w &&
+                        mouseY > r.y && mouseY < r.y + r.h) {
+                        if (r.action === 'resume') {
+                            paused = false;
+                            pendingTimeout = setTimeout(() => this.updateImage(), t);
+                        } else if (r.action === 'title') {
+                            clearTimeout(pendingTimeout);
+                            paused = false;
+                            this.sceneManager.showScene(title_screen);
+                        } else if (r.action === 'end') {
+                            clearTimeout(pendingTimeout);
+                            paused = false;
+                            this.sceneManager.showScene(podium_screen, this.getWinningTrees());
+                        }
+                        return;
+                    }
+                }
+
+                // Also allow clicking the pause button itself to resume
+                if (mouseX > pauseBtn.x && mouseX < pauseBtn.x + pauseBtn.width &&
+                    mouseY > pauseBtn.y && mouseY < pauseBtn.y + pauseBtn.height) {
+                    paused = false;
+                    pendingTimeout = setTimeout(() => this.updateImage(), t);
                 }
                 return;
             }
 
-            // Only allow tree planting when not paused
-            if (paused) return;
+            // Check pause button when not paused
+            if (mouseX > pauseBtn.x && mouseX < pauseBtn.x + pauseBtn.width &&
+                mouseY > pauseBtn.y && mouseY < pauseBtn.y + pauseBtn.height) {
+                paused = true;
+                clearTimeout(pendingTimeout);
+                return;
+            }
 
+            // Tree planting
             for (let b of this.buttons) {
                 if (
                     mouseX > b.x &&

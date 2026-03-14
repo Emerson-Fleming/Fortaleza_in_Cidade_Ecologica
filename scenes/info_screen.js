@@ -69,6 +69,7 @@ class info_screen {
                     selectedTree = null; // reset tree detail when switching tabs
                     if (selectedOption === 2) {
                         this.sceneManager.showScene(game_screen);
+                        selectedOption = 0; // reset to first tab when coming back from game
                     }
                     return;
                 }
