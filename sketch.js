@@ -17,11 +17,13 @@ function preload() {
 }
 
 function setup() {
+  console.log('Setup starting - all assets loaded!');
   createCanvas(1920, 1080);
   textFont(font);
   mgr = new SceneManager();
   mgr.wire();
   mgr.showScene(title_screen);
+  console.log('Setup complete!');
 }
 
 function draw() {
@@ -44,9 +46,14 @@ function loadStreetImages() {
   ];
 
   let i = 0;
+  console.log('Loading ' + imageNumbers.length + ' street images...');
 
   for (let num of imageNumbers) {
-    streetImages[i] = loadImage(photosPath + "E_" + num + ".webp");
+    let imagePath = photosPath + "E_" + num + ".webp";
+    streetImages[i] = loadImage(imagePath, 
+      () => {}, // Success callback - silent
+      (err) => console.error('Failed to load image:', imagePath, err)
+    );
     streetImageNames[i] = "E_" + num + ".webp";
     i++;
   }
@@ -80,10 +87,35 @@ function loadMenuTrees() {
 }
 
 function loadBackgroundAndFont() {
-  backgroundImg = loadImage('assets/background.png');
-  font = loadFont('assets/fonts/PressStart2P.ttf');
+  backgroundImg = loadImage('assets/background.png', 
+    () => console.log('Background loaded'),
+    (err) => console.error('Failed to load background:', err)
+  );
+  font = loadFont('assets/fonts/PressStart2P.ttf',
+    () => console.log('Font loaded'),
+    (err) => console.error('Failed to load font:', err)
+  );
 }
 
 function mousePressed() {
-  mgr.handleEvent("mousePressed");
+  // Only handle mouse press if scene manager is initialized
+  if (mgr) {
+    mgr.handleEvent("mousePressed");
+  }
+}
+
+function mouseClicked() {
+  // Only handle mouse click if scene manager is initialized
+  console.log('mouseClicked fired');
+  if (mgr) {
+    mgr.handleEvent("mouseClicked");
+  }
+}
+
+function keyPressed() {
+  // Only handle key press if scene manager is initialized
+  console.log('keyPressed fired');
+  if (mgr) {
+    mgr.handleEvent("keyPressed");
+  }
 }

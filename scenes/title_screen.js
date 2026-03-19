@@ -50,10 +50,12 @@ class title_screen {
     };
 
     this.mouseClicked = function () {
+      console.log('title_screen mouseClicked');
       this.sceneManager.showScene(info_screen);
     };
 
     this.keyPressed = function () {
+      console.log('title_screen keyPressed');
       this.sceneManager.showScene(info_screen);
     };
   }

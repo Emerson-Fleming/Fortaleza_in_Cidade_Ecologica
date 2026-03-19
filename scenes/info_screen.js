@@ -169,7 +169,6 @@ class info_screen {
             textFont(font);
             textSize(24);
             textAlign(LEFT, CENTER);
-            textWrap(WORD);
             fill(255);
             textLeading(50);
             text(howToPlayText, boxX, boxY, boxW, boxH);
@@ -210,7 +209,6 @@ class info_screen {
 
             textFont(font);
             textAlign(LEFT, CENTER);
-            textWrap(WORD);
 
             fill(255);
             textSize(28);
