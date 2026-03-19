@@ -1,7 +1,8 @@
 class podium_screen {
-    constructor() { 
+    constructor() {
         //let backgroundImg;
         let podiumImg;
+        let firstPlace, secondPlace, thirdPlace;
         let assetPath = 'assets/';
         let podiumPath = 'podium_screen/'
         let data;
@@ -26,10 +27,10 @@ class podium_screen {
             imageMode(CENTER)
             image(podiumImg, width / 2, height / 2);
 
-            let firstPlace = data[0];
-            let secondPlace = data[1];
-            let thirdPlace = data[2];
-            
+            firstPlace = data[0];
+            secondPlace = data[1];
+            thirdPlace = data[2];
+
             //wip: gotta get the photos to line up with the podium
             // imageMode(CENTER);
             // image(firstPlace.tree_img, (width * .3) + 50, (height / 2) - 150);
@@ -47,5 +48,9 @@ class podium_screen {
             textAlign(CENTER);
             text(`${thirdPlace.type} x${thirdPlace.count}`, (width * .7) + 25, (height / 2) + 300);
         }
+
+        this.mouseClicked = function () {
+            this.sceneManager.showScene(podium_info_screen, firstPlace);
+        };
     }
 }
