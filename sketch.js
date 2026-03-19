@@ -6,12 +6,12 @@ let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
 let menuCarnauba, menuCajueiro, menuJuazeiro, menuJuca, menuMororo, menuOiti;
 let carnaubaDesc, cajueiroDesc, juazeiroDesc, jucaDesc, mororoDesc, oitiDesc;
 let trees = [
-  { type: 'Carnauba', img: () => carnaubaImg, btn: () => carnaubaBtn, menuImg: () => menuCarnauba, desc: () => carnaubaDesc },
-  { type: 'Cajueiro', img: () => cajueiroImg, btn: () => cajueiroBtn, menuImg: () => menuCajueiro, desc: () => cajueiroDesc },
-  { type: 'Juazeiro', img: () => juazeiroImg, btn: () => juazeiroBtn, menuImg: () => menuJuazeiro, desc: () => juazeiroDesc },
-  { type: 'Juca', img: () => jucaImg, btn: () => jucaBtn, menuImg: () => menuJuca, desc: () => jucaDesc },
-  { type: 'Mororo', img: () => mororoImg, btn: () => mororoBtn, menuImg: () => menuMororo, desc: () => mororoDesc },
-  { type: 'Oiti', img: () => oitiImg, btn: () => oitiBtn, menuImg: () => menuOiti, desc: () => oitiDesc }
+  { type: 'Carnauba', img: () => carnaubaImg, btn: () => carnaubaBtn, menuImg: () => menuCarnauba, desc: () => carnaubaDesc, offset: 0.3 },
+  { type: 'Cajueiro', img: () => cajueiroImg, btn: () => cajueiroBtn, menuImg: () => menuCajueiro, desc: () => cajueiroDesc, offset: 0.5 },
+  { type: 'Juazeiro', img: () => juazeiroImg, btn: () => juazeiroBtn, menuImg: () => menuJuazeiro, desc: () => juazeiroDesc, offset: 0.5 },
+  { type: 'Juca', img: () => jucaImg, btn: () => jucaBtn, menuImg: () => menuJuca, desc: () => jucaDesc, offset: 0.5 },
+  { type: 'Mororo', img: () => mororoImg, btn: () => mororoBtn, menuImg: () => menuMororo, desc: () => mororoDesc, offset: 0.4 },
+  { type: 'Oiti', img: () => oitiImg, btn: () => oitiBtn, menuImg: () => menuOiti, desc: () => oitiDesc, offset: 0.5 }
 ]
 let backgroundImg;
 let font;

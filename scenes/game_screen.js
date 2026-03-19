@@ -5,7 +5,7 @@ class game_screen {
         let plantedTrees = [];
         let annotations = null;
         let buttonsInitialized = false;
-        let carnaubaCount = 0, cajueiroCount = 0, juazeiroCount = 0, jucaCount = 0, mororoCount = 0, oitiCount = 0;
+        let treeCounts = {};
         let paused = false;
         let pauseImg, playImg;
         let pauseBtn = { x: 0, y: 0, width: 0, height: 0 };
@@ -39,12 +39,10 @@ class game_screen {
             pendingTimeout = null;
             i = 0;
             plantedTrees = [];
-            carnaubaCount = 0;
-            cajueiroCount = 0;
-            juazeiroCount = 0;
-            jucaCount = 0;
-            mororoCount = 0;
-            oitiCount = 0;
+            treeCounts = {};
+            for (let tree of trees) {
+                treeCounts[tree.type] = 0;
+            }
             paused = false;
             pauseMenuRects = [];
 
@@ -65,14 +63,16 @@ class game_screen {
                 const startX = (width - totalButtonWidth) / 2;
                 const buttonY = footerStartY + (footerHeight - buttonSize) / 2;
 
-                this.buttons = [
-                    { img: carnaubaBtn, tree: carnaubaImg, x: startX + (0 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .3 },
-                    { img: cajueiroBtn, tree: cajueiroImg, x: startX + (1 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .5 },
-                    { img: juazeiroBtn, tree: juazeiroImg, x: startX + (2 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .5 },
-                    { img: jucaBtn, tree: jucaImg, x: startX + (3 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .5 },
-                    { img: mororoBtn, tree: mororoImg, x: startX + (4 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .4 },
-                    { img: oitiBtn, tree: oitiImg, x: startX + (5 * (buttonSize + padding)), y: buttonY, width: buttonSize, height: buttonSize, offset: .5 }
-                ];
+                this.buttons = trees.map((tree, idx) => ({
+                    type: tree.type,
+                    img: tree.btn(),
+                    tree: tree.img(),
+                    x: startX + (idx * (buttonSize + padding)),
+                    y: buttonY,
+                    width: buttonSize,
+                    height: buttonSize,
+                    offset: tree.offset
+                }));
 
                 // Pause button: left side of footer
                 const btnSize = 80;
@@ -287,42 +287,22 @@ class game_screen {
                     offset: button.offset,
                     pointIndex: points.indexOf(highestPoint)
                 });
-                this.countTrees(button.tree);
+                this.countTrees(button.type);
             }
         };
 
-        this.countTrees = function (tree) {
-            switch (tree) {
-                case carnaubaImg:
-                    carnaubaCount++;
-                    break;
-                case cajueiroImg:
-                    cajueiroCount++;
-                    break;
-                case juazeiroImg:
-                    juazeiroCount++;
-                    break;
-                case jucaImg:
-                    jucaCount++;
-                    break;
-                case mororoImg:
-                    mororoCount++;
-                    break;
-                case oitiImg:
-                    oitiCount++;
-                    break;
+        this.countTrees = function (treeType) {
+            if (treeCounts[treeType] !== undefined) {
+                treeCounts[treeType]++;
             }
         }
 
         this.getWinningTrees = function () {
-            const counts = [
-                { type: 'Carnauba', tree_img: menuCarnauba, count: carnaubaCount },
-                { type: 'Cajueiro', tree_img: menuCajueiro, count: cajueiroCount },
-                { type: 'Juazeiro', tree_img: menuJuazeiro, count: juazeiroCount },
-                { type: 'Juca', tree_img: menuJuca, count: jucaCount },
-                { type: 'Mororo', tree_img: menuMororo, count: mororoCount },
-                { type: 'Oiti', tree_img: menuOiti, count: oitiCount }
-            ];
+            const counts = trees.map(tree => ({
+                type: tree.type,
+                tree_img: tree.menuImg(),
+                count: treeCounts[tree.type] || 0
+            }));
             print(counts)
 
             //sort counts by count descending
