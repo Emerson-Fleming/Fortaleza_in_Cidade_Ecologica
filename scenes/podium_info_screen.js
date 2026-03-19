@@ -81,12 +81,6 @@ class podium_info_screen {
             textSize(18);
             wrapText(treeData.desc(), textX, imgY + 140, textW, 40);
 
-            // Back hint
-            textSize(14);
-            fill(180);
-            textAlign(CENTER, BOTTOM);
-            text('click anywhere to return to title', width / 2, height - 40);
-
             pop();
         }
 

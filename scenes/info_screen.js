@@ -25,6 +25,26 @@ class info_screen {
             text(line, x, yPos);
         };
 
+        // Helper to calculate number of lines for wrapped text
+        const countLines = function(txt, maxWidth) {
+            let words = txt.split(' ');
+            let line = '';
+            let lines = 1;
+            
+            for (let i = 0; i < words.length; i++) {
+                let testLine = line + words[i] + ' ';
+                let testWidth = textWidth(testLine);
+                
+                if (testWidth > maxWidth && i > 0) {
+                    line = words[i] + ' ';
+                    lines++;
+                } else {
+                    line = testLine;
+                }
+            }
+            return lines;
+        };
+
         this.setup = function () {
             // Initialize button positions
             buttons = [
@@ -157,31 +177,29 @@ class info_screen {
         this.drawHowToPlay = function () {
             push();
 
-            // Match the same area as the tree grid
+            // Calculate horizontal positioning to match tree grid area
             let imgSize = menuMororo.width;
-            let labelHeight = 50;
             let paddingX = 80;
-            let paddingY = 70;
             let cols = 3;
-            let rows = 2;
             let cellW = imgSize + paddingX;
-            let cellH = imgSize + labelHeight + paddingY;
             let gridAreaStartX = width * 0.3;
             let gridAreaWidth = width * 2 / 3;
             let gridTotalW = cols * cellW - paddingX;
             let boxX = gridAreaStartX + (gridAreaWidth - gridTotalW) / 2;
-            let boxY = height / 2 - cellH;
             let boxW = gridTotalW;
-            let boxH = rows * cellH - paddingY;
 
             let howToPlayText = "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat. consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat.consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua.";
 
             textFont(font);
-            console.log(font)
             textSize(24);
+            let lineHeight = 50;
+            let numLines = countLines(howToPlayText, boxW);
+            let totalTextHeight = numLines * lineHeight;
+            let startY = (height - totalTextHeight) / 2;
+
             textAlign(LEFT, TOP);
             fill(255);
-            wrapText(howToPlayText, boxX, boxY, boxW, 50);
+            wrapText(howToPlayText, boxX, startY, boxW, lineHeight);
 
             pop();
         }
@@ -227,12 +245,6 @@ class info_screen {
             fill(255);
             textSize(18);
             wrapText(selectedTree.desc(), textX, imgY + 28 + 60, textW, 40);
-
-            // Back hint
-            textSize(14);
-            fill(180);
-            textAlign(LEFT, BOTTOM);
-            text('< click anywhere to go back', boxX, boxY + boxH);
 
             pop();
         }
