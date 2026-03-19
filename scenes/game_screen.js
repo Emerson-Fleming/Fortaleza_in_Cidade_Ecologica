@@ -144,15 +144,15 @@ class game_screen {
             fill(20);
             stroke(255);
             strokeWeight(3);
-            rect(boxX, boxY, boxW, boxH, 16);
+            rect(boxX, boxY, boxW, boxH);
 
             // Title
             noStroke();
             fill(255);
             textFont(font);
             textSize(32);
-            textAlign(CENTER, TOP);
-            text('PAUSED', width / 2, boxY + 40);
+            textAlign(CENTER);
+            text('PAUSED', width / 2, boxY + 78);
 
             // Menu items
             pauseMenuRects = [];
@@ -178,12 +178,12 @@ class game_screen {
                     fill(50);
                 }
                 noStroke();
-                rect(itemX, itemY, itemW, itemH, 8);
+                rect(itemX, itemY, itemW, itemH);
 
                 fill(255);
                 textSize(22);
-                textAlign(CENTER, CENTER);
-                text(item.label, itemX + itemW / 2, itemY + itemH / 2);
+                textAlign(CENTER);
+                text(item.label, itemX + itemW / 2, itemY + 39);
             }
 
             pop();

@@ -6,6 +6,27 @@ class info_screen {
         let buttons = [];
         let selectedTree = null; // holds the clicked tree object when viewing detail
 
+        // Helper function for word-wrapping text (q5.js compatibility)
+        const wrapText = function(txt, x, y, maxWidth, lineHeight) {
+            let words = txt.split(' ');
+            let line = '';
+            let yPos = y;
+            
+            for (let i = 0; i < words.length; i++) {
+                let testLine = line + words[i] + ' ';
+                let testWidth = textWidth(testLine);
+                
+                if (testWidth > maxWidth && i > 0) {
+                    text(line, x, yPos);
+                    line = words[i] + ' ';
+                    yPos += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            text(line, x, yPos);
+        };
+
         const treeOptions = [
             { img: () => menuMororo, label: 'Mororò', description: 'This key Caatinga species is popular know as pata-de-vaca (cow\'s foot), with a light, sparse crown, and it\'s a “biological barometer,” sprouting after heavy rains. It\'s a beautiful ornamental tree, and more, due to its high adaptability, mororó plant is used in revegetation projects for eroded soil!' },
             { img: () => menuCarnauba, label: 'Carnaúba', description: 'Get to know Carnaúba, the “tree of life” that is the symbol of Ceará. Pictured in the state flag, it\'s endemic to the Caatinga, and can reach 15 m in height! From its leaves, we can extract wax that is widely used in global cosmetic, food, pharma, and even tech industries. Their deep and beautiful roots resist drought and salinity, preventing erosion.' },
@@ -168,10 +189,9 @@ class info_screen {
 
             textFont(font);
             textSize(24);
-            textAlign(LEFT, CENTER);
+            textAlign(LEFT, TOP);
             fill(255);
-            textLeading(50);
-            text(howToPlayText, boxX, boxY, boxW, boxH);
+            wrapText(howToPlayText, boxX, boxY, boxW, 50);
 
             pop();
         }
@@ -208,16 +228,15 @@ class info_screen {
             let textW = boxW - detailImgSize - 40;
 
             textFont(font);
-            textAlign(LEFT, CENTER);
+            textAlign(LEFT, TOP);
 
             fill(255);
             textSize(28);
-            text(selectedTree.label, textX, imgY + 48, textW);
+            text(selectedTree.label, textX, imgY + 48);
 
             fill(255);
             textSize(18);
-            textLeading(40);
-            text(selectedTree.description, textX, imgY + 28 + 20, textW, boxH - 80);
+            wrapText(selectedTree.description, textX, imgY + 28 + 60, textW, 40);
 
             // Back hint
             textSize(14);
