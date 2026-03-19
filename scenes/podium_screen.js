@@ -15,9 +15,19 @@ class podium_screen {
 
         this.enter = function () {
             data = this.sceneArgs;
-            firstPlace = data && data[0] ? data[0] : null;
-            secondPlace = data && data[1] ? data[1] : null;
-            thirdPlace = data && data[2] ? data[2] : null;
+            // Look up full tree data from global trees array
+            const getTreeData = (item) => {
+                if (!item) return null;
+                const treeInfo = trees.find(t => t.type === item.type);
+                return {
+                    ...item,
+                    tree_img: treeInfo ? treeInfo.menuImg() : item.tree_img,
+                    desc: treeInfo ? treeInfo.desc() : ''
+                };
+            };
+            firstPlace = data && data[0] ? getTreeData(data[0]) : null;
+            secondPlace = data && data[1] ? getTreeData(data[1]) : null;
+            thirdPlace = data && data[2] ? getTreeData(data[2]) : null;
             ignoreClicksUntil = Date.now() + 250;
         }
 
