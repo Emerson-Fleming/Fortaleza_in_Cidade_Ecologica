@@ -225,15 +225,29 @@ class info_screen {
             let boxH = rows * cellH - paddingY;
 
             // Left side: tree image, centered vertically in the box
-            let detailImgSize = boxH * 0.7;
+            let maxImgSize = boxH * 0.7;
+            let treeImg = selectedTree.img();
+            let aspectRatio = treeImg.width / treeImg.height;
+            let detailImgW, detailImgH;
+            
+            if (aspectRatio >= 1) {
+                // Wider than tall - constrain by width
+                detailImgW = maxImgSize;
+                detailImgH = maxImgSize / aspectRatio;
+            } else {
+                // Taller than wide - constrain by height
+                detailImgH = maxImgSize;
+                detailImgW = maxImgSize * aspectRatio;
+            }
+            
             let imgX = boxX;
-            let imgY = boxY + (boxH - detailImgSize) / 2;
+            let imgY = boxY + (boxH - detailImgH) / 2;
             imageMode(CORNER);
-            image(selectedTree.img(), imgX, imgY, detailImgSize, detailImgSize);
+            image(treeImg, imgX, imgY, detailImgW, detailImgH);
 
             // Right side: title then description
-            let textX = boxX + detailImgSize + 40;
-            let textW = boxW - detailImgSize - 40;
+            let textX = boxX + detailImgW + 40;
+            let textW = boxW - detailImgW - 40;
 
             textFont(font);
             textAlign(LEFT, TOP);
