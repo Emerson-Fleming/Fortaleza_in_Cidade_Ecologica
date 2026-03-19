@@ -28,7 +28,29 @@ class game_screen {
             pauseImg = loadImage('assets/game_screen/pause.png');
             playImg = loadImage('assets/game_screen/pause.png'); // replaced below if a play asset exists
             textFont('Press Start 2P');
-            this.updateImage();
+        }
+
+        this.enter = function () {
+            this.resetGameState();
+        }
+
+        this.resetGameState = function () {
+            clearTimeout(pendingTimeout);
+            pendingTimeout = null;
+            i = 0;
+            plantedTrees = [];
+            carnaubaCount = 0;
+            cajueiroCount = 0;
+            juazeiroCount = 0;
+            jucaCount = 0;
+            mororoCount = 0;
+            oitiCount = 0;
+            paused = false;
+            pauseMenuRects = [];
+
+            if (streetImages.length > 0) {
+                pendingTimeout = setTimeout(() => this.updateImage(), t);
+            }
         }
 
         this.draw = function () {
@@ -95,6 +117,7 @@ class game_screen {
                 i++;
                 pendingTimeout = setTimeout(() => this.updateImage(), t);
             } else {
+                pendingTimeout = null;
                 i = 0;
                 this.sceneManager.showScene(podium_screen, this.getWinningTrees());
             }
