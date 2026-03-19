@@ -2,11 +2,15 @@ class podium_info_screen {
     constructor() {
         let assetPath = 'assets/';
         let data;
+        let ignoreClicksUntil = 0;
         this.setup = function () {
             this.preload();
-            data = this.sceneArgs;
-            print(data)
             textFont(font);
+        }
+
+        this.enter = function () {
+            data = this.sceneArgs;
+            ignoreClicksUntil = Date.now() + 250;
         }
 
         this.preload = function () {
@@ -15,6 +19,11 @@ class podium_info_screen {
 
         this.draw = function () {
             background(backgroundImg);
+
+            if (!data) {
+                return;
+            }
+
             imageMode(CENTER)
 
             image(data.tree_img, width / 2, height / 2 - 100);
@@ -27,6 +36,9 @@ class podium_info_screen {
         }
 
         this.mouseClicked = function () {
+            if (Date.now() < ignoreClicksUntil) {
+                return;
+            }
             this.sceneManager.showScene(title_screen);
         };
     }

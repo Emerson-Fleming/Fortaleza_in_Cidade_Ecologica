@@ -6,12 +6,19 @@ class podium_screen {
         let assetPath = 'assets/';
         let podiumPath = 'podium_screen/'
         let data;
+        let ignoreClicksUntil = 0;
         //let font;
         this.setup = function () {
             this.preload();
-            data = this.sceneArgs;
-            print(data)
             textFont(font);
+        }
+
+        this.enter = function () {
+            data = this.sceneArgs;
+            firstPlace = data && data[0] ? data[0] : null;
+            secondPlace = data && data[1] ? data[1] : null;
+            thirdPlace = data && data[2] ? data[2] : null;
+            ignoreClicksUntil = Date.now() + 250;
         }
 
         this.preload = function () {
@@ -24,12 +31,12 @@ class podium_screen {
             imageMode(CORNER);
             background(backgroundImg);
 
+            if (!data || !firstPlace || !secondPlace || !thirdPlace) {
+                return;
+            }
+
             imageMode(CENTER)
             image(podiumImg, width / 2, height / 2);
-
-            firstPlace = data[0];
-            secondPlace = data[1];
-            thirdPlace = data[2];
 
             //wip: gotta get the photos to line up with the podium
             // imageMode(CENTER);
@@ -50,6 +57,9 @@ class podium_screen {
         }
 
         this.mouseClicked = function () {
+            if (Date.now() < ignoreClicksUntil) {
+                return;
+            }
             this.sceneManager.showScene(podium_info_screen, firstPlace);
         };
     }
