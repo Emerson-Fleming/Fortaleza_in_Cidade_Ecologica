@@ -53,15 +53,29 @@ class podium_info_screen {
             let boxY = (height - boxH) / 2;
 
             // Left side: tree image
-            let imgSize = boxH * 0.8;
+            let maxImgSize = boxH * 0.8;
+            let treeImg = treeData.img();
+            let aspectRatio = treeImg.width / treeImg.height;
+            let imgW, imgH;
+            
+            if (aspectRatio >= 1) {
+                // Wider than tall - constrain by width
+                imgW = maxImgSize;
+                imgH = maxImgSize / aspectRatio;
+            } else {
+                // Taller than wide - constrain by height
+                imgH = maxImgSize;
+                imgW = maxImgSize * aspectRatio;
+            }
+            
             let imgX = boxX;
-            let imgY = boxY + (boxH - imgSize) / 2;
+            let imgY = boxY + (boxH - imgH) / 2;
             imageMode(CORNER);
-            image(treeData.img(), imgX, imgY, imgSize, imgSize);
+            image(treeImg, imgX, imgY, imgW, imgH);
 
             // Right side: title and description
-            let textX = boxX + imgSize + 60;
-            let textW = boxW - imgSize - 60;
+            let textX = boxX + imgW + 60;
+            let textW = boxW - imgW - 60;
 
             textFont(font);
             textAlign(LEFT, TOP);
