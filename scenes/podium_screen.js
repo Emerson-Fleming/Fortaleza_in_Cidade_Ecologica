@@ -49,10 +49,10 @@ class podium_screen {
             image(podiumImg, width / 2, height / 2);
 
             //wip: gotta get the photos to line up with the podium
-            // imageMode(CENTER);
-            // image(firstPlace.tree_img, (width * .3) + 50, (height / 2) - 150);
-            // image(secondPlace.tree_img, (width * .5) + 50, (height / 2) - 100);
-            // image(thirdPlace.tree_img, (width * .7) + 25, (height / 2) - 50);
+            imageMode(CENTER);
+            image(firstPlace.tree_img, (width * .3) + 50, (height / 2) - 160 - (firstPlace.tree_img.height / 2));
+            image(secondPlace.tree_img, (width * .5) + 50, (height / 2) - 40 - (secondPlace.tree_img.height / 2));
+            image(thirdPlace.tree_img, (width * .7) + 25, (height / 2) + 80 - (thirdPlace.tree_img.height / 2));
 
             // Display counts on podium
             fill(255);
