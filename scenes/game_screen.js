@@ -7,14 +7,13 @@ class game_screen {
         let buttonsInitialized = false;
         let treeCounts = {};
         let paused = false;
-        let pauseImg, playImg;
         let pauseBtn = { x: 0, y: 0, width: 0, height: 0 };
         let pendingTimeout = null;
 
         // Pause menu options
         const pauseMenuItems = [
-            { label: 'RESUME',         action: 'resume' },
-            { label: 'END GAME',       action: 'end'    }
+            { label: 'RESUME', action: 'resume' },
+            { label: 'END GAME', action: 'end' }
         ];
         let pauseMenuRects = []; // computed hit areas
 
@@ -24,8 +23,6 @@ class game_screen {
             loadJSON('assets/json/annotations.json', (data) => {
                 annotations = data.annotations;
             });
-            pauseImg = loadImage('assets/game_screen/pause.png');
-            playImg = loadImage('assets/game_screen/pause.png'); // replaced below if a play asset exists
             textFont('Press Start 2P');
         }
 
@@ -74,12 +71,11 @@ class game_screen {
                 }));
 
                 // Pause button: left side of footer
-                const btnSize = 80;
                 pauseBtn = {
-                    x: 40,
-                    y: footerStartY + (footerHeight - btnSize) / 2,
-                    width: btnSize,
-                    height: btnSize
+                    x: 100,
+                    y: footerStartY + (footerHeight - pauseImg.height) / 2,
+                    width: pauseImg.width,
+                    height: pauseImg.height
                 };
 
                 buttonsInitialized = true;
@@ -126,22 +122,10 @@ class game_screen {
             fill(0);
             rect(0, footerStartY, width, height - footerStartY);
 
-            // Draw pause/play button on the left
+            // Draw pause button on the left
             imageMode(CORNER);
-            if (pauseImg) {
-                if (paused) {
-                    // Draw a simple play triangle when paused
-                    fill(255);
-                    noStroke();
-                    triangle(
-                        pauseBtn.x + pauseBtn.width * 0.2, pauseBtn.y + pauseBtn.height * 0.1,
-                        pauseBtn.x + pauseBtn.width * 0.2, pauseBtn.y + pauseBtn.height * 0.9,
-                        pauseBtn.x + pauseBtn.width * 0.9, pauseBtn.y + pauseBtn.height * 0.5
-                    );
-                } else {
-                    image(pauseImg, pauseBtn.x, pauseBtn.y, pauseBtn.width, pauseBtn.height);
-                }
-            }
+            image(pauseImg, pauseBtn.x, pauseBtn.y, pauseBtn.width, pauseBtn.height);
+
 
             for (let b of this.buttons) {
                 imageMode(CORNER);
@@ -192,7 +176,7 @@ class game_screen {
 
                 // Highlight on hover
                 const hovered = mouseX > itemX && mouseX < itemX + itemW &&
-                                 mouseY > itemY && mouseY < itemY + itemH;
+                    mouseY > itemY && mouseY < itemY + itemH;
 
                 if (hovered) {
                     fill(0, 176, 0);

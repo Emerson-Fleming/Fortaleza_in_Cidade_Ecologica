@@ -1,6 +1,7 @@
 let mgr;
 let streetImages = []; // Global array to store all preloaded street images
 let streetImageNames = [];
+let pauseImg, titleScreenImg, startGameImg, podiumImg;
 let carnaubaImg, cajueiroImg, juazeiroImg, jucaImg, mororoImg, oitiImg;
 let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
 let menuCarnauba, menuCajueiro, menuJuazeiro, menuJuca, menuMororo, menuOiti;
@@ -23,7 +24,15 @@ function preload() {
   loadTreeButtons();
   loadMenuTrees();
   loadBackgroundAndFont();
+  loadSceneImages();
   setTreeDescriptions();
+}
+
+function loadSceneImages() {
+  pauseImg = loadImage('assets/game_screen/pause.png');
+  titleScreenImg = loadImage('assets/title_screen/title_screen.png');
+  startGameImg = loadImage('assets/title_screen/start_game.png');
+  podiumImg = loadImage('assets/podium_screen/podium.png');
 }
 
 function setup() {

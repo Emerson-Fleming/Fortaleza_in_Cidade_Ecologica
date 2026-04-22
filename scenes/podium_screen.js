@@ -1,15 +1,10 @@
 class podium_screen {
     constructor() {
-        //let backgroundImg;
-        let podiumImg;
         let firstPlace, secondPlace, thirdPlace;
-        let assetPath = 'assets/';
-        let podiumPath = 'podium_screen/'
         let data;
         let ignoreClicksUntil = 0;
-        //let font;
+
         this.setup = function () {
-            this.preload();
             textFont(headingFont);
         }
 
@@ -29,12 +24,6 @@ class podium_screen {
             secondPlace = data && data[1] ? getTreeData(data[1]) : null;
             thirdPlace = data && data[2] ? getTreeData(data[2]) : null;
             ignoreClicksUntil = Date.now() + 250;
-        }
-
-        this.preload = function () {
-            //backgroundImg = loadImage(assetPath + 'background.png');
-            podiumImg = loadImage(assetPath + podiumPath + 'podium.png');
-            //font = loadFont(assetPath + 'fonts/PressStart2P.ttf');
         }
 
         this.draw = function () {
