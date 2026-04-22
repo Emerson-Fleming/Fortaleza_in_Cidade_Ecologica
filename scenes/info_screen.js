@@ -71,6 +71,7 @@ class info_screen {
         this.drawOptionsMenu = function () {
             textFont(font);
             textSize(24);
+            textAlign(LEFT, TOP);
             let lineHeight = 30;
 
             for (let btn of buttons) {
