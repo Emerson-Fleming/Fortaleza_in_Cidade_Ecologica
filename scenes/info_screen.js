@@ -91,7 +91,7 @@ class info_screen {
             // Check option menu buttons
             for (let btn of buttons) {
                 textFont(bodyFont);
-                textSize(24);
+                textSize(40);
                 let lineHeight = 30;
                 let lines = btn.label.split('\n');
                 let btnTextWidth = Math.max(...lines.map(l => textWidth(l)));
