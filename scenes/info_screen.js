@@ -48,9 +48,10 @@ class info_screen {
         this.setup = function () {
             // Initialize button positions
             buttons = [
-                { label: 'INTRODUCING\nOUR STARS', x: width / 10, y: height / 3, index: 0 },
-                { label: 'HOW TO PLAY', x: width / 10, y: height / 2, index: 1 },
-                { label: 'START GAME', x: width / 10, y: height * 2 / 3, index: 2 }
+                { label: 'INTRODUCING\nOUR STARS', x: width / 10, y: height * 2 / 7, index: 0 },
+                { label: 'HOW TO PLAY', x: width / 10, y: height * 3 / 7, index: 1 },
+                { label: 'START GAME', x: width / 10, y: height * 4 / 7, index: 2 },
+                { label: '<<<', x: width / 10, y: height * 5 / 7, index: 3 }
             ];
         }
 
@@ -106,6 +107,10 @@ class info_screen {
                     if (selectedOption === 2) {
                         this.sceneManager.showScene(game_screen);
                         selectedOption = 0; // reset to first tab when coming back from game
+                    }
+                    if (selectedOption === 3) {
+                        this.sceneManager.showScene(title_screen);
+                        selectedOption = 0; // reset to first tab when coming back from title
                     }
                     return;
                 }
