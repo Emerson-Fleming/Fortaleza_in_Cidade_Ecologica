@@ -95,12 +95,12 @@ class info_screen {
                 let lineHeight = 30;
                 let lines = btn.label.split('\n');
                 let btnTextWidth = Math.max(...lines.map(l => textWidth(l)));
-                let btnTextHeight = lines.length * lineHeight;
+                let btnTextHeight = (lines.length - 1) * lineHeight + 40;
 
                 if (mouseX > btn.x &&
                     mouseX < btn.x + btnTextWidth &&
-                    mouseY > btn.y - lineHeight / 2 &&
-                    mouseY < btn.y - lineHeight / 2 + btnTextHeight) {
+                    mouseY > btn.y &&
+                    mouseY < btn.y + btnTextHeight) {
                     selectedOption = btn.index;
                     selectedTree = null; // reset tree detail when switching tabs
                     if (selectedOption === 2) {
