@@ -5,15 +5,15 @@ class info_screen {
         let selectedTree = null; // holds the clicked tree object when viewing detail
 
         // Helper function for word-wrapping text (q5.js compatibility)
-        const wrapText = function(txt, x, y, maxWidth, lineHeight) {
+        const wrapText = function (txt, x, y, maxWidth, lineHeight) {
             let words = txt.split(' ');
             let line = '';
             let yPos = y;
-            
+
             for (let i = 0; i < words.length; i++) {
                 let testLine = line + words[i] + ' ';
                 let testWidth = textWidth(testLine);
-                
+
                 if (testWidth > maxWidth && i > 0) {
                     text(line, x, yPos);
                     line = words[i] + ' ';
@@ -26,15 +26,15 @@ class info_screen {
         };
 
         // Helper to calculate number of lines for wrapped text
-        const countLines = function(txt, maxWidth) {
+        const countLines = function (txt, maxWidth) {
             let words = txt.split(' ');
             let line = '';
             let lines = 1;
-            
+
             for (let i = 0; i < words.length; i++) {
                 let testLine = line + words[i] + ' ';
                 let testWidth = textWidth(testLine);
-                
+
                 if (testWidth > maxWidth && i > 0) {
                     line = words[i] + ' ';
                     lines++;
@@ -71,6 +71,7 @@ class info_screen {
         this.drawOptionsMenu = function () {
             textFont(font);
             textSize(24);
+            let lineHeight = 30;
 
             for (let btn of buttons) {
                 if (btn.index === selectedOption) {
@@ -78,7 +79,10 @@ class info_screen {
                 } else {
                     fill(255); // white when not selected
                 }
-                text(btn.label, btn.x, btn.y);
+                let lines = btn.label.split('\n');
+                for (let j = 0; j < lines.length; j++) {
+                    text(lines[j], btn.x, btn.y + j * lineHeight);
+                }
             }
         }
 
@@ -87,14 +91,15 @@ class info_screen {
             for (let btn of buttons) {
                 textFont(font);
                 textSize(24);
-
-                let btnTextWidth = textWidth(btn.label);
-                let textHeight = 24 * 3;
+                let lineHeight = 30;
+                let lines = btn.label.split('\n');
+                let btnTextWidth = Math.max(...lines.map(l => textWidth(l)));
+                let btnTextHeight = lines.length * lineHeight;
 
                 if (mouseX > btn.x &&
                     mouseX < btn.x + btnTextWidth &&
-                    mouseY > btn.y - textHeight / 2 &&
-                    mouseY < btn.y + textHeight / 2) {
+                    mouseY > btn.y - lineHeight / 2 &&
+                    mouseY < btn.y - lineHeight / 2 + btnTextHeight) {
                     selectedOption = btn.index;
                     selectedTree = null; // reset tree detail when switching tabs
                     if (selectedOption === 2) {
@@ -229,7 +234,7 @@ class info_screen {
             let treeImg = selectedTree.img();
             let aspectRatio = treeImg.width / treeImg.height;
             let detailImgW, detailImgH;
-            
+
             if (aspectRatio >= 1) {
                 // Wider than tall - constrain by width
                 detailImgW = maxImgSize;
@@ -239,7 +244,7 @@ class info_screen {
                 detailImgH = maxImgSize;
                 detailImgW = maxImgSize * aspectRatio;
             }
-            
+
             let imgX = boxX;
             let imgY = boxY + (boxH - detailImgH) / 2;
             imageMode(CORNER);
