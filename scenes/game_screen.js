@@ -14,7 +14,6 @@ class game_screen {
         // Pause menu options
         const pauseMenuItems = [
             { label: 'RESUME',         action: 'resume' },
-            { label: 'TITLE SCREEN',   action: 'title'  },
             { label: 'END GAME',       action: 'end'    }
         ];
         let pauseMenuRects = []; // computed hit areas
@@ -160,7 +159,7 @@ class game_screen {
 
             // Menu box
             const boxW = 600;
-            const boxH = 420;
+            const boxH = 300;
             const boxX = (width - boxW) / 2;
             const boxY = (height - boxH) / 2;
 
@@ -174,8 +173,8 @@ class game_screen {
             fill(255);
             textFont(font);
             textSize(32);
-            textAlign(CENTER);
-            text('PAUSED', width / 2, boxY + 78);
+            textAlign(CENTER, CENTER);
+            text('PAUSED', width / 2, boxY + boxH / 4);
 
             // Menu items
             pauseMenuRects = [];
@@ -205,8 +204,8 @@ class game_screen {
 
                 fill(255);
                 textSize(22);
-                textAlign(CENTER);
-                text(item.label, itemX + itemW / 2, itemY + 39);
+                textAlign(CENTER, CENTER);
+                text(item.label, itemX + itemW / 2, itemY + itemH / 2);
             }
 
             pop();
