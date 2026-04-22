@@ -25,10 +25,6 @@ class podium_info_screen {
             text(line, x, yPos);
         };
 
-        this.setup = function () {
-            textFont(font);
-        }
-
         this.enter = function () {
             data = this.sceneArgs;
             // Look up full tree data from global trees array
@@ -77,12 +73,13 @@ class podium_info_screen {
             let textX = boxX + imgW + 60;
             let textW = boxW - imgW - 60;
 
-            textFont(font);
+            //textFont(bodyFont);
             textAlign(LEFT, TOP);
 
             // Title
             fill(255);
             textSize(36);
+            textFont(headingFont);
             text(treeData.type, textX, imgY + 20);
 
             // Count subtitle
@@ -92,7 +89,8 @@ class podium_info_screen {
 
             // Description
             fill(255);
-            textSize(18);
+            textSize(36);
+            textFont(bodyFont);
             wrapText(treeData.desc(), textX, imgY + 140, textW, 40);
 
             pop();

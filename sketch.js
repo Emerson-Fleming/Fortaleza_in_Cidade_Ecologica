@@ -1,20 +1,21 @@
 let mgr;
 let streetImages = []; // Global array to store all preloaded street images
 let streetImageNames = [];
+let pauseImg, titleScreenImg, startGameImg, podiumImg;
 let carnaubaImg, cajueiroImg, juazeiroImg, jucaImg, mororoImg, oitiImg;
 let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
 let menuCarnauba, menuCajueiro, menuJuazeiro, menuJuca, menuMororo, menuOiti;
 let carnaubaDesc, cajueiroDesc, juazeiroDesc, jucaDesc, mororoDesc, oitiDesc;
 let trees = [
-  { type: 'Carnauba', img: () => carnaubaImg, btn: () => carnaubaBtn, menuImg: () => menuCarnauba, desc: () => carnaubaDesc, offset: 0.3 },
+  { type: 'Carnaúba', img: () => carnaubaImg, btn: () => carnaubaBtn, menuImg: () => menuCarnauba, desc: () => carnaubaDesc, offset: 0.3 },
   { type: 'Cajueiro', img: () => cajueiroImg, btn: () => cajueiroBtn, menuImg: () => menuCajueiro, desc: () => cajueiroDesc, offset: 0.5 },
   { type: 'Juazeiro', img: () => juazeiroImg, btn: () => juazeiroBtn, menuImg: () => menuJuazeiro, desc: () => juazeiroDesc, offset: 0.5 },
-  { type: 'Juca', img: () => jucaImg, btn: () => jucaBtn, menuImg: () => menuJuca, desc: () => jucaDesc, offset: 0.5 },
-  { type: 'Mororo', img: () => mororoImg, btn: () => mororoBtn, menuImg: () => menuMororo, desc: () => mororoDesc, offset: 0.4 },
+  { type: 'Jucá', img: () => jucaImg, btn: () => jucaBtn, menuImg: () => menuJuca, desc: () => jucaDesc, offset: 0.5 },
+  { type: 'Mororó', img: () => mororoImg, btn: () => mororoBtn, menuImg: () => menuMororo, desc: () => mororoDesc, offset: 0.4 },
   { type: 'Oiti', img: () => oitiImg, btn: () => oitiBtn, menuImg: () => menuOiti, desc: () => oitiDesc, offset: 0.5 }
 ]
 let backgroundImg;
-let font;
+let bodyFont, headingFont;
 let photosPath = 'assets/game_screen/street_photos/';
 
 function preload() {
@@ -23,13 +24,21 @@ function preload() {
   loadTreeButtons();
   loadMenuTrees();
   loadBackgroundAndFont();
+  loadSceneImages();
   setTreeDescriptions();
+}
+
+function loadSceneImages() {
+  pauseImg = loadImage('assets/game_screen/pause.png');
+  titleScreenImg = loadImage('assets/title_screen/title_screen.png');
+  startGameImg = loadImage('assets/title_screen/start_game.png');
+  podiumImg = loadImage('assets/podium_screen/podium.png');
 }
 
 function setup() {
   console.log('Setup starting - all assets loaded!');
   createCanvas(1920, 1080);
-  textFont(font);
+  textFont(bodyFont);
   mgr = new SceneManager();
   mgr.wire();
   mgr.showScene(title_screen);
@@ -110,7 +119,11 @@ function loadBackgroundAndFont() {
     () => console.log('Background loaded'),
     (err) => console.error('Failed to load background:', err)
   );
-  font = loadFont('assets/fonts/PressStart2P.ttf',
+  headingFont = loadFont('assets/fonts/PressStart2P.ttf',
+    () => console.log('Font loaded'),
+    (err) => console.error('Failed to load font:', err)
+  );
+  bodyFont = loadFont('assets/fonts/littlelego.ttf',
     () => console.log('Font loaded'),
     (err) => console.error('Failed to load font:', err)
   );

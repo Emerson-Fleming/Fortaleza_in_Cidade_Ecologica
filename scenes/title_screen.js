@@ -1,19 +1,10 @@
 class title_screen {
   constructor() {
-    let titleScreenImg;
-    let startGameImg;
     let startBlink = 0;
-    let assetPath = 'assets/title_screen/';
 
     this.setup = function () {
-      this.preload();
       textFont('Press Start 2P');
     };
-
-    this.preload = function () {
-      titleScreenImg = loadImage(assetPath + 'title_screen.png');
-      startGameImg = loadImage(assetPath + 'start_game.png');
-    }
 
     this.windowResized = function () {
       resizeCanvas(windowWidth, windowHeight);

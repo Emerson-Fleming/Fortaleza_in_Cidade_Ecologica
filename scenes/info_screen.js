@@ -48,9 +48,10 @@ class info_screen {
         this.setup = function () {
             // Initialize button positions
             buttons = [
-                { label: 'INTRODUCING\nOUR STARS', x: width / 10, y: height / 3, index: 0 },
-                { label: 'HOW TO PLAY', x: width / 10, y: height / 2, index: 1 },
-                { label: 'START GAME', x: width / 10, y: height * 2 / 3, index: 2 }
+                { label: 'INTRODUCING\nOUR STARS', x: width / 10, y: height * 2 / 7, index: 0 },
+                { label: 'HOW TO PLAY', x: width / 10, y: height * 3 / 7, index: 1 },
+                { label: 'START GAME', x: width / 10, y: height * 4 / 7, index: 2 },
+                { label: '<<<', x: width / 10, y: height * 5 / 7, index: 3 }
             ];
         }
 
@@ -69,8 +70,9 @@ class info_screen {
         }
 
         this.drawOptionsMenu = function () {
-            textFont(font);
-            textSize(24);
+            textFont(bodyFont);
+            textSize(40);
+            textAlign(LEFT, TOP);
             let lineHeight = 30;
 
             for (let btn of buttons) {
@@ -89,22 +91,26 @@ class info_screen {
         this.mouseClicked = function () {
             // Check option menu buttons
             for (let btn of buttons) {
-                textFont(font);
-                textSize(24);
+                textFont(bodyFont);
+                textSize(40);
                 let lineHeight = 30;
                 let lines = btn.label.split('\n');
                 let btnTextWidth = Math.max(...lines.map(l => textWidth(l)));
-                let btnTextHeight = lines.length * lineHeight;
+                let btnTextHeight = (lines.length - 1) * lineHeight + 40;
 
                 if (mouseX > btn.x &&
                     mouseX < btn.x + btnTextWidth &&
-                    mouseY > btn.y - lineHeight / 2 &&
-                    mouseY < btn.y - lineHeight / 2 + btnTextHeight) {
+                    mouseY > btn.y &&
+                    mouseY < btn.y + btnTextHeight) {
                     selectedOption = btn.index;
                     selectedTree = null; // reset tree detail when switching tabs
                     if (selectedOption === 2) {
                         this.sceneManager.showScene(game_screen);
                         selectedOption = 0; // reset to first tab when coming back from game
+                    }
+                    if (selectedOption === 3) {
+                        this.sceneManager.showScene(title_screen);
+                        selectedOption = 0; // reset to first tab when coming back from title
                     }
                     return;
                 }
@@ -173,6 +179,7 @@ class info_screen {
 
                 image(trees[i].menuImg(), x, y, imgSize, imgSize);
                 textSize(24);
+                textFont(headingFont);
                 fill(255);
                 text(trees[i].type, x + imgSize / 2, y + imgSize + 10);
             }
@@ -195,9 +202,9 @@ class info_screen {
 
             let howToPlayText = "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat. consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat.consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua.";
 
-            textFont(font);
-            textSize(24);
-            let lineHeight = 50;
+            textFont(bodyFont);
+            textSize(36);
+            let lineHeight = 60;
             let numLines = countLines(howToPlayText, boxW);
             let totalTextHeight = numLines * lineHeight;
             let startY = (height - totalTextHeight) / 2;
@@ -254,16 +261,18 @@ class info_screen {
             let textX = boxX + detailImgW + 40;
             let textW = boxW - detailImgW - 40;
 
-            textFont(font);
+            
             textAlign(LEFT, TOP);
 
+            textFont(headingFont);
             fill(255);
             textSize(28);
             text(selectedTree.type, textX, imgY + 48);
 
+            textFont(bodyFont);
             fill(255);
-            textSize(18);
-            wrapText(selectedTree.desc(), textX, imgY + 28 + 60, textW, 40);
+            textSize(28);
+            wrapText(selectedTree.desc(), textX, imgY + 48 + 60, textW, 40);
 
             pop();
         }
