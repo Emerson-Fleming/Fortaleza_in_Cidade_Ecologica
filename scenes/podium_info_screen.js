@@ -25,10 +25,6 @@ class podium_info_screen {
             text(line, x, yPos);
         };
 
-        // this.setup = function () {
-        //     textFont(font);
-        // }
-
         this.enter = function () {
             data = this.sceneArgs;
             // Look up full tree data from global trees array
