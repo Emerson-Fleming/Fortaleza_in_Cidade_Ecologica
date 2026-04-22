@@ -73,7 +73,7 @@ class podium_info_screen {
             let textX = boxX + imgW + 60;
             let textW = boxW - imgW - 60;
 
-            textFont(bodyFont);
+            //textFont(bodyFont);
             textAlign(LEFT, TOP);
 
             // Title
@@ -89,7 +89,7 @@ class podium_info_screen {
 
             // Description
             fill(255);
-            textSize(18);
+            textSize(36);
             textFont(bodyFont);
             wrapText(treeData.desc(), textX, imgY + 140, textW, 40);
 

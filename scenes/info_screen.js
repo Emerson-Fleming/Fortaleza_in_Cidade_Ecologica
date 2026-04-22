@@ -203,8 +203,8 @@ class info_screen {
             let howToPlayText = "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat. consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat.consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua.";
 
             textFont(bodyFont);
-            textSize(24);
-            let lineHeight = 50;
+            textSize(36);
+            let lineHeight = 60;
             let numLines = countLines(howToPlayText, boxW);
             let totalTextHeight = numLines * lineHeight;
             let startY = (height - totalTextHeight) / 2;
@@ -261,17 +261,18 @@ class info_screen {
             let textX = boxX + detailImgW + 40;
             let textW = boxW - detailImgW - 40;
 
-            textFont(headingFont);
+            
             textAlign(LEFT, TOP);
 
+            textFont(headingFont);
             fill(255);
             textSize(28);
             text(selectedTree.type, textX, imgY + 48);
 
             textFont(bodyFont);
             fill(255);
-            textSize(18);
-            wrapText(selectedTree.desc(), textX, imgY + 28 + 60, textW, 40);
+            textSize(28);
+            wrapText(selectedTree.desc(), textX, imgY + 48 + 60, textW, 40);
 
             pop();
         }
