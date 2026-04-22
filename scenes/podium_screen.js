@@ -10,7 +10,7 @@ class podium_screen {
         //let font;
         this.setup = function () {
             this.preload();
-            textFont(font);
+            textFont(headingFont);
         }
 
         this.enter = function () {
@@ -57,7 +57,7 @@ class podium_screen {
             // Display counts on podium
             fill(255);
             textSize(24);
-            textFont(font);
+            textFont(bodyFont);
             textAlign(CENTER);
             text(`${firstPlace.type} x${firstPlace.count}`, (width * .3) + 50, (height / 2) + 300);
             textAlign(CENTER);

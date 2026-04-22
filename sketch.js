@@ -14,7 +14,7 @@ let trees = [
   { type: 'Oiti', img: () => oitiImg, btn: () => oitiBtn, menuImg: () => menuOiti, desc: () => oitiDesc, offset: 0.5 }
 ]
 let backgroundImg;
-let font;
+let bodyFont, headingFont;
 let photosPath = 'assets/game_screen/street_photos/';
 
 function preload() {
@@ -29,7 +29,7 @@ function preload() {
 function setup() {
   console.log('Setup starting - all assets loaded!');
   createCanvas(1920, 1080);
-  textFont(font);
+  textFont(bodyFont);
   mgr = new SceneManager();
   mgr.wire();
   mgr.showScene(title_screen);
@@ -110,7 +110,11 @@ function loadBackgroundAndFont() {
     () => console.log('Background loaded'),
     (err) => console.error('Failed to load background:', err)
   );
-  font = loadFont('assets/fonts/PressStart2P.ttf',
+  headingFont = loadFont('assets/fonts/PressStart2P.ttf',
+    () => console.log('Font loaded'),
+    (err) => console.error('Failed to load font:', err)
+  );
+  bodyFont = loadFont('assets/fonts/littlelego.ttf',
     () => console.log('Font loaded'),
     (err) => console.error('Failed to load font:', err)
   );

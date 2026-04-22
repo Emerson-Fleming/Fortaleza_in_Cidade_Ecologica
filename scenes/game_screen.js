@@ -171,7 +171,7 @@ class game_screen {
             // Title
             noStroke();
             fill(255);
-            textFont(font);
+            textFont(headingFont);
             textSize(32);
             textAlign(CENTER, CENTER);
             text('PAUSED', width / 2, boxY + boxH / 4);
