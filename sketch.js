@@ -6,13 +6,14 @@ let carnaubaImg, cajueiroImg, juazeiroImg, jucaImg, mororoImg, oitiImg;
 let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
 let menuCarnauba, menuCajueiro, menuJuazeiro, menuJuca, menuMororo, menuOiti;
 let carnaubaDesc, cajueiroDesc, juazeiroDesc, jucaDesc, mororoDesc, oitiDesc;
+let carnaubaPodiumDesc, cajueiroPodiumDesc, juazeiroPodiumDesc, jucaPodiumDesc, mororoPodiumDesc, oitiPodiumDesc;
 let trees = [
-  { type: 'Carnaúba', img: () => carnaubaImg, btn: () => carnaubaBtn, menuImg: () => menuCarnauba, desc: () => carnaubaDesc, offset: 0.3 },
-  { type: 'Cajueiro', img: () => cajueiroImg, btn: () => cajueiroBtn, menuImg: () => menuCajueiro, desc: () => cajueiroDesc, offset: 0.5 },
-  { type: 'Juazeiro', img: () => juazeiroImg, btn: () => juazeiroBtn, menuImg: () => menuJuazeiro, desc: () => juazeiroDesc, offset: 0.5 },
-  { type: 'Jucá', img: () => jucaImg, btn: () => jucaBtn, menuImg: () => menuJuca, desc: () => jucaDesc, offset: 0.5 },
-  { type: 'Mororó', img: () => mororoImg, btn: () => mororoBtn, menuImg: () => menuMororo, desc: () => mororoDesc, offset: 0.4 },
-  { type: 'Oiti', img: () => oitiImg, btn: () => oitiBtn, menuImg: () => menuOiti, desc: () => oitiDesc, offset: 0.5 }
+  { type: 'Carnaúba', img: () => carnaubaImg, btn: () => carnaubaBtn, menuImg: () => menuCarnauba, desc: () => carnaubaDesc, podiumDesc: () => carnaubaPodiumDesc, offset: 0.3, shadowCoefficient: 1 },
+  { type: 'Cajueiro', img: () => cajueiroImg, btn: () => cajueiroBtn, menuImg: () => menuCajueiro, desc: () => cajueiroDesc, podiumDesc: () => cajueiroPodiumDesc, offset: 0.5, shadowCoefficient: 3 },
+  { type: 'Juazeiro', img: () => juazeiroImg, btn: () => juazeiroBtn, menuImg: () => menuJuazeiro, desc: () => juazeiroDesc, podiumDesc: () => juazeiroPodiumDesc, offset: 0.5, shadowCoefficient: 4 },
+  { type: 'Jucá', img: () => jucaImg, btn: () => jucaBtn, menuImg: () => menuJuca, desc: () => jucaDesc, podiumDesc: () => jucaPodiumDesc, offset: 0.5, shadowCoefficient: 5 },
+  { type: 'Mororó', img: () => mororoImg, btn: () => mororoBtn, menuImg: () => menuMororo, desc: () => mororoDesc, podiumDesc: () => mororoPodiumDesc, offset: 0.4, shadowCoefficient: 2 },
+  { type: 'Oiti', img: () => oitiImg, btn: () => oitiBtn, menuImg: () => menuOiti, desc: () => oitiDesc, podiumDesc: () => oitiPodiumDesc, offset: 0.5, shadowCoefficient: 6 }
 ]
 let backgroundImg;
 let bodyFont, headingFont;
@@ -96,6 +97,15 @@ function setTreeDescriptions() {
   oitiDesc = 'A medium-to-large evergreen tree with a dense, rounded crown, reaching up to 20m in height. Its velvety leaves reduce water loss in hot weather, and it produces small, sweet yellow fruits loved by humans and birds. It\'s also resistant to pollution! ';
 }
 
+function setTreePodiumDescriptions(treeTotal, shadowScore) {
+  carnaubaPodiumDesc = `Compliments on choosing Carnaúba as your most planted tree, with ${treeTotal} in total—it\'s the symbol of Ceará! It\'s incredibly important for the state\'s economy and truly beautiful (I love palm trees), but when it comes to shade, it ranks lowest among our six heroes. Still, together with the others, you created ${nf(shadowScore, 1, 2)}% of shaded areas!`;
+  cajueiroPodiumDesc = `Way to go! We love cashew juice, and you planted ${treeTotal} of them! In total, you created ${nf(shadowScore, 1, 2)}% of shaded areas. Although we also love its nut, its canopy density can be quite uneven, sometimes generating less shade than our other choices. `;
+  juazeiroPodiumDesc = `Cheers! You planted ${treeTotal} Juazeiros, creating ${nf(shadowScore, 1, 2)}% of shade in total, and they are great for thermal comfort. Just be careful—their amazing roots grow deep in search of water underground, and if planted in narrow sidewalks or near piping, they can cause structural damage.`;
+  jucaPodiumDesc = `That\'s wonderful! You planted ${treeTotal} Jucás, creating a total of ${nf(shadowScore, 1, 2)}% of shaded areas. And you can enjoy it even more, and use the tree\'s bark, fruits, and seeds for teas, syrups, and natural medicine to treat a range of infections.`;
+  mororoPodiumDesc = `Good job on planting ${treeTotal} Mororós. They are beautiful and offer an excellent alternative source of income for rural communities, thanks to their value as high-protein forage and their use in construction and fuel. That said, they\'re not great for shade—but don\'t be sad! With the other trees, you still covered ${nf(shadowScore, 1, 2)}% of the street in shade.`;
+  oitiPodiumDesc = `You did it so well! The tree you planted the most was OITI, with ${treeTotal} trees. Our number #1 for shade coefficient, you created ${nf(shadowScore, 1, 2)}% of shaded areas. But don\'t forget—since Oitis can grow very tall, they need pruning to avoid conflicts with pole wiring.`;
+}
+
 function loadTreeButtons() {
   carnaubaBtn = loadImage('assets/tree_buttons/carnauba_button.png');
   cajueiroBtn = loadImage('assets/tree_buttons/cajueiro_button.png');
@@ -119,9 +129,13 @@ function loadBackgroundAndFont() {
     () => console.log('Background loaded'),
     (err) => console.error('Failed to load background:', err)
   );
-  headingFont = loadFont('assets/fonts/PressStart2P.ttf',
-    () => console.log('Font loaded'),
-    (err) => console.error('Failed to load font:', err)
+  headingFont = loadFont('assets/fonts/pixel_operator/PixelOperator-Bold.ttf',
+    () => console.log('Heading font loaded'),
+    (err) => console.error('Failed to load heading font:', err)
+  );
+  descriptionFont = loadFont('assets/fonts/pixel_operator/PixelOperator.ttf',
+    () => console.log('Description font loaded'),
+    (err) => console.error('Failed to load description font:', err)
   );
   bodyFont = loadFont('assets/fonts/littlelego.ttf',
     () => console.log('Font loaded'),

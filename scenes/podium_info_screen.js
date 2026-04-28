@@ -2,7 +2,11 @@ class podium_info_screen {
     constructor() {
         let data;
         let treeData;
+        let allCounts = [];
+        let shadowScore = 0;
         let ignoreClicksUntil = 0;
+        let totalPossiblePoints = 0;
+        let weightedSum = 0;
 
         // Helper function for word-wrapping text
         const wrapText = function(txt, x, y, maxWidth, lineHeight) {
@@ -26,9 +30,19 @@ class podium_info_screen {
         };
 
         this.enter = function () {
-            data = this.sceneArgs;
+            const args = this.sceneArgs;
+            data = args.tree || args;
+            allCounts = args.allCounts || [];
             // Look up full tree data from global trees array
             treeData = data ? trees.find(t => t.type === data.type) : null;
+            // Compute shadow coefficient score
+            totalPossiblePoints = (args.totalPossiblePoints || 0);
+            weightedSum = allCounts.reduce((s, c) => {
+                const treeInfo = trees.find(tr => tr.type === c.type);
+                return s + c.count * (treeInfo ? treeInfo.shadowCoefficient : 0);
+            }, 0);
+            shadowScore = totalPossiblePoints > 0 ? weightedSum / totalPossiblePoints : 0;
+            setTreePodiumDescriptions(data.count, shadowScore * 100);
             ignoreClicksUntil = Date.now() + 250;
         }
 
@@ -78,20 +92,21 @@ class podium_info_screen {
 
             // Title
             fill(255);
-            textSize(36);
+            textSize(60);
             textFont(headingFont);
             text(treeData.type, textX, imgY + 20);
 
             // Count subtitle
             fill(0, 176, 0);
-            textSize(24);
+            textSize(36);
+            textFont(headingFont);
             text(`Planted: ${data.count}`, textX, imgY + 80);
 
             // Description
             fill(255);
             textSize(36);
-            textFont(bodyFont);
-            wrapText(treeData.desc(), textX, imgY + 140, textW, 40);
+            textFont(descriptionFont);
+            wrapText(treeData.podiumDesc(), textX, imgY + 190, textW, 40);
 
             pop();
         }

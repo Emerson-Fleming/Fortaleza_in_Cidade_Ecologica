@@ -10,6 +10,7 @@ class podium_screen {
 
         this.enter = function () {
             data = this.sceneArgs;
+            const counts = data.counts || data;
             // Look up full tree data from global trees array
             const getTreeData = (item) => {
                 if (!item) return null;
@@ -20,9 +21,10 @@ class podium_screen {
                     desc: treeInfo ? treeInfo.desc() : ''
                 };
             };
-            firstPlace = data && data[0] ? getTreeData(data[0]) : null;
-            secondPlace = data && data[1] ? getTreeData(data[1]) : null;
-            thirdPlace = data && data[2] ? getTreeData(data[2]) : null;
+            firstPlace = counts && counts[0] ? getTreeData(counts[0]) : null;
+            secondPlace = counts && counts[1] ? getTreeData(counts[1]) : null;
+            thirdPlace = counts && counts[2] ? getTreeData(counts[2]) : null;
+            // counts may contain all 6 trees; top 3 are already sorted first
             ignoreClicksUntil = Date.now() + 250;
         }
 
@@ -45,7 +47,7 @@ class podium_screen {
 
             // Display counts on podium
             fill(255);
-            textSize(24);
+            textSize(48);
             textFont(headingFont);
             textAlign(CENTER);
             text(`${firstPlace.type} x${firstPlace.count}`, (width * .3) + 50, (height / 2) + 300);
@@ -59,7 +61,12 @@ class podium_screen {
             if (Date.now() < ignoreClicksUntil) {
                 return;
             }
-            this.sceneManager.showScene(podium_info_screen, firstPlace);
+            const counts = data.counts || data;
+            this.sceneManager.showScene(podium_info_screen, {
+                tree: firstPlace,
+                allCounts: counts,
+                totalPossiblePoints: data.totalPossiblePoints || 0
+            });
         };
     }
 }

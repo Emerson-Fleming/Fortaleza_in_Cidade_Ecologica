@@ -178,7 +178,7 @@ class info_screen {
                 let y = gridStartY + row * cellH;
 
                 image(trees[i].menuImg(), x, y, imgSize, imgSize);
-                textSize(24);
+                textSize(48);
                 textFont(headingFont);
                 fill(255);
                 text(trees[i].type, x + imgSize / 2, y + imgSize + 10);
@@ -202,7 +202,7 @@ class info_screen {
 
             let howToPlayText = "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat. consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat.consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua.";
 
-            textFont(bodyFont);
+            textFont(descriptionFont);
             textSize(36);
             let lineHeight = 60;
             let numLines = countLines(howToPlayText, boxW);
@@ -266,12 +266,12 @@ class info_screen {
 
             textFont(headingFont);
             fill(255);
-            textSize(28);
+            textSize(60);
             text(selectedTree.type, textX, imgY + 48);
 
-            textFont(bodyFont);
+            textFont(descriptionFont);
             fill(255);
-            textSize(28);
+            textSize(36);
             wrapText(selectedTree.desc(), textX, imgY + 48 + 60, textW, 40);
 
             pop();

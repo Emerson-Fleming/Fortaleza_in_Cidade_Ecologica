@@ -9,6 +9,9 @@ class game_screen {
         let paused = false;
         let pauseBtn = { x: 0, y: 0, width: 0, height: 0 };
         let pendingTimeout = null;
+        let gameStartMillis = 0;
+        let pausedAt = 0;
+        let totalPausedMs = 0;
 
         // Pause menu options
         const pauseMenuItems = [
@@ -41,6 +44,9 @@ class game_screen {
             }
             paused = false;
             pauseMenuRects = [];
+            gameStartMillis = millis();
+            pausedAt = 0;
+            totalPausedMs = 0;
 
             if (streetImages.length > 0) {
                 pendingTimeout = setTimeout(() => this.updateImage(), t);
@@ -126,11 +132,28 @@ class game_screen {
             imageMode(CORNER);
             image(pauseImg, pauseBtn.x, pauseBtn.y, pauseBtn.width, pauseBtn.height);
 
-
             for (let b of this.buttons) {
                 imageMode(CORNER);
                 image(b.img, b.x, b.y, b.width, b.height);
             }
+
+            // Draw countdown timer in bottom right (symmetrical to pause button)
+            const totalMs = streetImages.length * t;
+            const pauseOffset = paused ? (millis() - pausedAt) : 0;
+            const elapsed = millis() - gameStartMillis - totalPausedMs - pauseOffset;
+            const remaining = max(0, totalMs - elapsed);
+            const totalSecs = floor(remaining / 1000);
+            const mins = floor(totalSecs / 60);
+            const secs = totalSecs % 60;
+            const timeStr = nf(mins, 2) + ':' + nf(secs, 2);
+            push();
+            textFont(headingFont);
+            textSize(48);
+            textAlign(RIGHT, CENTER);
+            fill(255);
+            noStroke();
+            text(timeStr, width - 100, pauseBtn.y + pauseBtn.height / 2);
+            pop();
         }
 
         this.drawPauseMenu = function () {
@@ -156,7 +179,7 @@ class game_screen {
             noStroke();
             fill(255);
             textFont(headingFont);
-            textSize(32);
+            textSize(48);
             textAlign(CENTER, CENTER);
             text('PAUSED', width / 2, boxY + boxH / 4);
 
@@ -187,7 +210,7 @@ class game_screen {
                 rect(itemX, itemY, itemW, itemH);
 
                 fill(255);
-                textSize(22);
+                textSize(32);
                 textAlign(CENTER, CENTER);
                 text(item.label, itemX + itemW / 2, itemY + itemH / 2);
             }
@@ -202,6 +225,7 @@ class game_screen {
                     if (mouseX > r.x && mouseX < r.x + r.w &&
                         mouseY > r.y && mouseY < r.y + r.h) {
                         if (r.action === 'resume') {
+                            totalPausedMs += millis() - pausedAt;
                             paused = false;
                             pendingTimeout = setTimeout(() => this.updateImage(), t);
                         } else if (r.action === 'title') {
@@ -220,6 +244,7 @@ class game_screen {
                 // Also allow clicking the pause button itself to resume
                 if (mouseX > pauseBtn.x && mouseX < pauseBtn.x + pauseBtn.width &&
                     mouseY > pauseBtn.y && mouseY < pauseBtn.y + pauseBtn.height) {
+                    totalPausedMs += millis() - pausedAt;
                     paused = false;
                     pendingTimeout = setTimeout(() => this.updateImage(), t);
                 }
@@ -230,6 +255,7 @@ class game_screen {
             if (mouseX > pauseBtn.x && mouseX < pauseBtn.x + pauseBtn.width &&
                 mouseY > pauseBtn.y && mouseY < pauseBtn.y + pauseBtn.height) {
                 paused = true;
+                pausedAt = millis();
                 clearTimeout(pendingTimeout);
                 return;
             }
@@ -237,13 +263,21 @@ class game_screen {
             // Tree planting
             for (let b of this.buttons) {
                 if (
-                    mouseX > b.x &&
+                    (mouseX > b.x &&
                     mouseX < b.x + b.width &&
                     mouseY > b.y &&
-                    mouseY < b.y + b.height
+                    mouseY < b.y + b.height)
                 ) {
                     this.plantTree(b);
                 }
+            }
+        }
+
+        this.keyPressed = function () {
+            if (paused) return;
+            const idx = '123456'.indexOf(key);
+            if (idx !== -1 && idx < this.buttons.length) {
+                this.plantTree(this.buttons[idx]);
             }
         }
 
@@ -291,7 +325,13 @@ class game_screen {
             //sort counts by count descending
             counts.sort((a, b) => b.count - a.count);
 
-            return counts.slice(0, 3);
+            const totalAnnotationPoints = annotations
+                ? Object.values(annotations).reduce((s, pts) => s + pts.length, 0)
+                : 0;
+            const maxShadowCoefficient = Math.max(...trees.map(tr => tr.shadowCoefficient));
+            const totalPossiblePoints = totalAnnotationPoints * maxShadowCoefficient;
+
+            return { counts, totalPossiblePoints };
         }
     }
 }

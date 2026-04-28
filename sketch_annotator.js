@@ -4,9 +4,11 @@ let currentImg = null;
 let points = [];
 let allAnnotations = {}; // All annotations stored in localStorage
 let cnv;
+let pixelFont;
 
 function preload() {
   manifest = loadJSON('assets/json/manifest.json');
+  pixelFont = loadFont('assets/fonts/pixel_operator/PixelOperator.ttf');
 }
 
 function setup() {
@@ -14,7 +16,7 @@ function setup() {
   cnv = createCanvas(800, 600);
   cnv.parent(holder);
   background(240);
-  textFont('Press Start 2P');
+  textFont(pixelFont);
 
   // Load saved annotations from localStorage
   const saved = localStorage.getItem('treeAnnotations');

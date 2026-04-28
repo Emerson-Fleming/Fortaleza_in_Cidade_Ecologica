@@ -9,8 +9,10 @@ let plantedTrees = []; // array of indices into current photo's points
 let loading = false;
 let preloading = new Set(); // Track which images are currently being preloaded
 const CACHE_SIZE = 5; // Keep 5 images in memory
+let pixelFont;
 
 function preload() {
+  pixelFont = loadFont('assets/fonts/pixel_operator/PixelOperator.ttf');
   treeImg1 = loadImage('assets/trees/Carnauba_1000_FINAL.png');
   treeImg2 = loadImage('assets/trees/Cajueiro_1000_FINAL.png');
   treeImg3 = loadImage('assets/trees/Juazeiro_1000_FINAL.png');
@@ -25,7 +27,7 @@ function setup() {
   const holder = document.getElementById('sketch-holder');
   cnv = createCanvas(800, 600);
   cnv.parent(holder);
-  textFont('Press Start 2P');
+  textFont(pixelFont);
 
   // hooks
   document.getElementById('nextBtn').addEventListener('click', nextPhoto);
