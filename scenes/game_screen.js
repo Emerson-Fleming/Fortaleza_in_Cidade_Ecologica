@@ -325,9 +325,11 @@ class game_screen {
             //sort counts by count descending
             counts.sort((a, b) => b.count - a.count);
 
-            const totalPossiblePoints = annotations
+            const totalAnnotationPoints = annotations
                 ? Object.values(annotations).reduce((s, pts) => s + pts.length, 0)
                 : 0;
+            const maxShadowCoefficient = Math.max(...trees.map(tr => tr.shadowCoefficient));
+            const totalPossiblePoints = totalAnnotationPoints * maxShadowCoefficient;
 
             return { counts, totalPossiblePoints };
         }

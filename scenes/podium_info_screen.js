@@ -5,6 +5,8 @@ class podium_info_screen {
         let allCounts = [];
         let shadowScore = 0;
         let ignoreClicksUntil = 0;
+        let totalPossiblePoints = 0;
+        let weightedSum = 0;
 
         // Helper function for word-wrapping text
         const wrapText = function(txt, x, y, maxWidth, lineHeight) {
@@ -34,8 +36,8 @@ class podium_info_screen {
             // Look up full tree data from global trees array
             treeData = data ? trees.find(t => t.type === data.type) : null;
             // Compute shadow coefficient score
-            const totalPossiblePoints = args.totalPossiblePoints || 0;
-            const weightedSum = allCounts.reduce((s, c) => {
+            totalPossiblePoints = (args.totalPossiblePoints || 0);
+            weightedSum = allCounts.reduce((s, c) => {
                 const treeInfo = trees.find(tr => tr.type === c.type);
                 return s + c.count * (treeInfo ? treeInfo.shadowCoefficient : 0);
             }, 0);
