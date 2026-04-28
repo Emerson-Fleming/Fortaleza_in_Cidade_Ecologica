@@ -202,7 +202,7 @@ class info_screen {
 
             let howToPlayText = "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat. consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat.consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua.";
 
-            textFont(bodyFont);
+            textFont(descriptionFont);
             textSize(36);
             let lineHeight = 60;
             let numLines = countLines(howToPlayText, boxW);
@@ -269,7 +269,7 @@ class info_screen {
             textSize(60);
             text(selectedTree.type, textX, imgY + 48);
 
-            textFont(bodyFont);
+            textFont(descriptionFont);
             fill(255);
             textSize(28);
             wrapText(selectedTree.desc(), textX, imgY + 48 + 60, textW, 40);

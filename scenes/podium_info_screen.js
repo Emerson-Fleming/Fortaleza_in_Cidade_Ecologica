@@ -90,7 +90,7 @@ class podium_info_screen {
             // Description
             fill(255);
             textSize(36);
-            textFont(bodyFont);
+            textFont(descriptionFont);
             wrapText(treeData.desc(), textX, imgY + 140, textW, 40);
 
             pop();

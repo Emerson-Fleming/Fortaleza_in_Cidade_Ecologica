@@ -237,13 +237,21 @@ class game_screen {
             // Tree planting
             for (let b of this.buttons) {
                 if (
-                    mouseX > b.x &&
+                    (mouseX > b.x &&
                     mouseX < b.x + b.width &&
                     mouseY > b.y &&
-                    mouseY < b.y + b.height
+                    mouseY < b.y + b.height)
                 ) {
                     this.plantTree(b);
                 }
+            }
+        }
+
+        this.keyPressed = function () {
+            if (paused) return;
+            const idx = '123456'.indexOf(key);
+            if (idx !== -1 && idx < this.buttons.length) {
+                this.plantTree(this.buttons[idx]);
             }
         }
 

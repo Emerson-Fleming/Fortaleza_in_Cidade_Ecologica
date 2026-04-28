@@ -123,6 +123,10 @@ function loadBackgroundAndFont() {
     () => console.log('Heading font loaded'),
     (err) => console.error('Failed to load heading font:', err)
   );
+  descriptionFont = loadFont('assets/fonts/pixel_operator/PixelOperator.ttf',
+    () => console.log('Description font loaded'),
+    (err) => console.error('Failed to load description font:', err)
+  );
   bodyFont = loadFont('assets/fonts/littlelego.ttf',
     () => console.log('Font loaded'),
     (err) => console.error('Failed to load font:', err)
