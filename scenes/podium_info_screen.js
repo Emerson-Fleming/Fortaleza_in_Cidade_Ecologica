@@ -84,7 +84,7 @@ class podium_info_screen {
 
             // Count subtitle
             fill(0, 176, 0);
-            textSize(24);
+            textSize(36);
             text(`Planted: ${data.count}`, textX, imgY + 80);
 
             // Description

@@ -271,7 +271,7 @@ class info_screen {
 
             textFont(descriptionFont);
             fill(255);
-            textSize(28);
+            textSize(36);
             wrapText(selectedTree.desc(), textX, imgY + 48 + 60, textW, 40);
 
             pop();
