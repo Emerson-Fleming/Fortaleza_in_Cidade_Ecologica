@@ -325,7 +325,11 @@ class game_screen {
             //sort counts by count descending
             counts.sort((a, b) => b.count - a.count);
 
-            return counts;
+            const totalPossiblePoints = annotations
+                ? Object.values(annotations).reduce((s, pts) => s + pts.length, 0)
+                : 0;
+
+            return { counts, totalPossiblePoints };
         }
     }
 }
