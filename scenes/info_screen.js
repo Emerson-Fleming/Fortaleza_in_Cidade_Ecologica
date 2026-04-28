@@ -178,7 +178,7 @@ class info_screen {
                 let y = gridStartY + row * cellH;
 
                 image(trees[i].menuImg(), x, y, imgSize, imgSize);
-                textSize(24);
+                textSize(48);
                 textFont(headingFont);
                 fill(255);
                 text(trees[i].type, x + imgSize / 2, y + imgSize + 10);
@@ -266,7 +266,7 @@ class info_screen {
 
             textFont(headingFont);
             fill(255);
-            textSize(28);
+            textSize(60);
             text(selectedTree.type, textX, imgY + 48);
 
             textFont(bodyFont);

@@ -3,7 +3,7 @@ class title_screen {
     let startBlink = 0;
 
     this.setup = function () {
-      textFont('Press Start 2P');
+      textFont(headingFont);
     };
 
     this.windowResized = function () {

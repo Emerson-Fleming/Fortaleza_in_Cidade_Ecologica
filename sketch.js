@@ -119,9 +119,9 @@ function loadBackgroundAndFont() {
     () => console.log('Background loaded'),
     (err) => console.error('Failed to load background:', err)
   );
-  headingFont = loadFont('assets/fonts/PressStart2P.ttf',
-    () => console.log('Font loaded'),
-    (err) => console.error('Failed to load font:', err)
+  headingFont = loadFont('assets/fonts/pixel_operator/PixelOperator-Bold.ttf',
+    () => console.log('Heading font loaded'),
+    (err) => console.error('Failed to load heading font:', err)
   );
   bodyFont = loadFont('assets/fonts/littlelego.ttf',
     () => console.log('Font loaded'),
