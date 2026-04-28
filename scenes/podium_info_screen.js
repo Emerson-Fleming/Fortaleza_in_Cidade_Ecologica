@@ -2,7 +2,18 @@ class podium_info_screen {
     constructor() {
         let data;
         let treeData;
+        let allCounts = [];
+        let shadowScore = 0;
         let ignoreClicksUntil = 0;
+
+        //total planted trees
+        let totalPlanted = data ? data.count : 0;
+        let totalPlantedOiti = data && data.type === 'Oiti' ? data.count : 0;
+        let totalPlantedJuca = data && data.type === 'Jucá' ? data.count : 0;
+        let totalPlantedJuazeiro = data && data.type === 'Juazeiro' ? data.count : 0;
+        let totalPlantedCajueiro = data && data.type === 'Cajueiro' ? data.count : 0;
+        let totalPlantedCarnauba = data && data.type === 'Carnaúba' ? data.count : 0;
+        let totalPlantedMororo = data && data.type === 'Mororó' ? data.count : 0;
 
         // Helper function for word-wrapping text
         const wrapText = function(txt, x, y, maxWidth, lineHeight) {
@@ -26,9 +37,18 @@ class podium_info_screen {
         };
 
         this.enter = function () {
-            data = this.sceneArgs;
+            const args = this.sceneArgs;
+            data = args.tree || args;
+            allCounts = args.allCounts || [];
             // Look up full tree data from global trees array
             treeData = data ? trees.find(t => t.type === data.type) : null;
+            // Compute shadow coefficient score
+            const maxPossibleScore = 1026 * 6;
+            const weightedSum = allCounts.reduce((s, c) => {
+                const treeInfo = trees.find(tr => tr.type === c.type);
+                return s + c.count * (treeInfo ? treeInfo.shadowCoefficient : 0);
+            }, 0);
+            shadowScore = weightedSum / maxPossibleScore;
             ignoreClicksUntil = Date.now() + 250;
         }
 
@@ -85,13 +105,20 @@ class podium_info_screen {
             // Count subtitle
             fill(0, 176, 0);
             textSize(36);
+            textFont(headingFont);
             text(`Planted: ${data.count}`, textX, imgY + 80);
+
+            // Shadow coefficient score
+            fill(255, 200, 0);
+            textSize(36);
+            textFont(headingFont);
+            text(`Shadow Score: ${nf(shadowScore, 1, 2)}`, textX, imgY + 130);
 
             // Description
             fill(255);
             textSize(36);
             textFont(descriptionFont);
-            wrapText(treeData.desc(), textX, imgY + 140, textW, 40);
+            wrapText(treeData.desc(), textX, imgY + 190, textW, 40);
 
             pop();
         }

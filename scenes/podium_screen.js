@@ -23,6 +23,7 @@ class podium_screen {
             firstPlace = data && data[0] ? getTreeData(data[0]) : null;
             secondPlace = data && data[1] ? getTreeData(data[1]) : null;
             thirdPlace = data && data[2] ? getTreeData(data[2]) : null;
+            // data may contain all 6 trees; top 3 are already sorted first
             ignoreClicksUntil = Date.now() + 250;
         }
 
@@ -59,7 +60,7 @@ class podium_screen {
             if (Date.now() < ignoreClicksUntil) {
                 return;
             }
-            this.sceneManager.showScene(podium_info_screen, firstPlace);
+            this.sceneManager.showScene(podium_info_screen, { tree: firstPlace, allCounts: data });
         };
     }
 }

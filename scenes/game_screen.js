@@ -325,7 +325,7 @@ class game_screen {
             //sort counts by count descending
             counts.sort((a, b) => b.count - a.count);
 
-            return counts.slice(0, 3);
+            return counts;
         }
     }
 }
