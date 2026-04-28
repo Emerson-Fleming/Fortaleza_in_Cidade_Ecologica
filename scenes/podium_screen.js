@@ -45,7 +45,7 @@ class podium_screen {
 
             // Display counts on podium
             fill(255);
-            textSize(24);
+            textSize(48);
             textFont(headingFont);
             textAlign(CENTER);
             text(`${firstPlace.type} x${firstPlace.count}`, (width * .3) + 50, (height / 2) + 300);

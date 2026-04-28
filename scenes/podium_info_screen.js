@@ -78,7 +78,7 @@ class podium_info_screen {
 
             // Title
             fill(255);
-            textSize(36);
+            textSize(60);
             textFont(headingFont);
             text(treeData.type, textX, imgY + 20);
 
