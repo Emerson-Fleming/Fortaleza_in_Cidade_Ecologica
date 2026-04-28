@@ -102,12 +102,6 @@ class podium_info_screen {
             textFont(headingFont);
             text(`Planted: ${data.count}`, textX, imgY + 80);
 
-            // Shadow coefficient score
-            fill(255, 200, 0);
-            textSize(36);
-            textFont(headingFont);
-            text(`Shadow Score: ${nf(shadowScore, 1, 2)}`, textX, imgY + 130);
-
             // Description
             fill(255);
             textSize(36);
