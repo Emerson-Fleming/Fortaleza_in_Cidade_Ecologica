@@ -1,4 +1,5 @@
 let mgr;
+const gameImageDurationMs = 3000; // milliseconds per street image
 let streetImages = []; // Global array to store all preloaded street images
 let streetImageNames = [];
 let pauseImg, titleScreenImg, startGameImg, podiumImg;
@@ -39,6 +40,7 @@ function loadSceneImages() {
 function setup() {
   console.log('Setup starting - all assets loaded!');
   createCanvas(1920, 1080);
+  displayMode('maxed');
   textFont(bodyFont);
   mgr = new SceneManager();
   mgr.wire();

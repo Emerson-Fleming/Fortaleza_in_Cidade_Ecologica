@@ -5,42 +5,55 @@ class info_screen {
         let selectedTree = null; // holds the clicked tree object when viewing detail
 
         // Helper function for word-wrapping text (q5.js compatibility)
+        // Mirrors p5.js approach: split on newlines first, then word-wrap each paragraph
         const wrapText = function (txt, x, y, maxWidth, lineHeight) {
-            let words = txt.split(' ');
-            let line = '';
+            let paragraphs = txt.split(/\r?\n|\r|\n/g);
             let yPos = y;
 
-            for (let i = 0; i < words.length; i++) {
-                let testLine = line + words[i] + ' ';
-                let testWidth = textWidth(testLine);
+            for (let p = 0; p < paragraphs.length; p++) {
+                let words = paragraphs[p].split(' ');
+                let line = '';
 
-                if (testWidth > maxWidth && i > 0) {
-                    text(line, x, yPos);
-                    line = words[i] + ' ';
-                    yPos += lineHeight;
-                } else {
-                    line = testLine;
+                for (let i = 0; i < words.length; i++) {
+                    let testLine = line + words[i] + ' ';
+                    let testWidth = textWidth(testLine);
+
+                    if (testWidth > maxWidth && i > 0) {
+                        text(line, x, yPos);
+                        line = words[i] + ' ';
+                        yPos += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
                 }
+                text(line, x, yPos);
+                yPos += lineHeight;
             }
-            text(line, x, yPos);
         };
 
         // Helper to calculate number of lines for wrapped text
+        // Mirrors p5.js approach: split on newlines first, then word-wrap each paragraph
         const countLines = function (txt, maxWidth) {
-            let words = txt.split(' ');
-            let line = '';
-            let lines = 1;
+            let paragraphs = txt.split(/\r?\n|\r|\n/g);
+            let lines = 0;
 
-            for (let i = 0; i < words.length; i++) {
-                let testLine = line + words[i] + ' ';
-                let testWidth = textWidth(testLine);
+            for (let p = 0; p < paragraphs.length; p++) {
+                let words = paragraphs[p].split(' ');
+                let line = '';
+                let paraLines = 1;
 
-                if (testWidth > maxWidth && i > 0) {
-                    line = words[i] + ' ';
-                    lines++;
-                } else {
-                    line = testLine;
+                for (let i = 0; i < words.length; i++) {
+                    let testLine = line + words[i] + ' ';
+                    let testWidth = textWidth(testLine);
+
+                    if (testWidth > maxWidth && i > 0) {
+                        line = words[i] + ' ';
+                        paraLines++;
+                    } else {
+                        line = testLine;
+                    }
                 }
+                lines += paraLines;
             }
             return lines;
         };
@@ -200,7 +213,8 @@ class info_screen {
             let boxX = gridAreaStartX + (gridAreaWidth - gridTotalW) / 2;
             let boxW = gridTotalW;
 
-            let howToPlayText = "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat. consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua. Ut enim ad minim veniam quis nostrud exercitation cillum dolore eu fugiat nulla pariatur cillum dolore eu ugiat.consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna uti aliqua.";
+            const gameMins = Math.round(streetImages.length * gameImageDurationMs / 60000);
+            let howToPlayText = "In this game, trees are the heroes. Your mission? Walk along Cidade Ecológica Street and plant six different species from the Caatinga biome.\nThe trees are waiting for you at the bottom of the screen—just click to plant and start casting shade. Each choice shapes the city, so choose with care (and a bit of intuition).\nUsing a keyboard? Press numbers 1 to 6 to select each tree from left to right.\nIt takes about " + gameMins + " minutes to reach the end of the street. You can pause anytime and come back to it—but the city would definitely be better if greener!\nEnjoy planting 🌿";
 
             textFont(descriptionFont);
             textSize(36);
