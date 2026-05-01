@@ -1,7 +1,7 @@
 class game_screen {
     constructor() {
         let i = 0;
-        let t = 3000; // 3 seconds per image
+        let t = gameImageDurationMs;
         let plantedTrees = [];
         let annotations = null;
         let buttonsInitialized = false;

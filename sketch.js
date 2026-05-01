@@ -1,4 +1,5 @@
 let mgr;
+const gameImageDurationMs = 3000; // milliseconds per street image
 let streetImages = []; // Global array to store all preloaded street images
 let streetImageNames = [];
 let pauseImg, titleScreenImg, startGameImg, podiumImg;
