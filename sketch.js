@@ -40,6 +40,7 @@ function loadSceneImages() {
 function setup() {
   console.log('Setup starting - all assets loaded!');
   createCanvas(1920, 1080);
+  displayMode('maxed');
   textFont(bodyFont);
   mgr = new SceneManager();
   mgr.wire();
