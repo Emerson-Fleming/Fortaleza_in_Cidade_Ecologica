@@ -8,7 +8,82 @@
 
   </head>
   <body>
+    <!-- Loading screen overlay -->
+    <div id="loading-screen">
+      <canvas id="loading-canvas"></canvas>
+      <p id="loading-text">Loading...</p>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/q5@2.8/q5.min.js"></script>
+    <script>
+      // ── Loading screen ──────────────────────────────────────────────────────
+      (function () {
+        const screen  = document.getElementById('loading-screen');
+        const canvas  = document.getElementById('loading-canvas');
+        const ctx     = canvas.getContext('2d');
+        const W = 120, H = 180;
+        canvas.width  = W;
+        canvas.height = H;
+
+        let progress  = 0;   // 0–1
+        let leafImg   = null;
+        let rafId     = null;
+
+        const leafSrc = new window.Image();
+        leafSrc.src   = 'assets/title_screen/leaf.png';
+        leafSrc.onload = () => { leafImg = leafSrc; };
+
+        function draw() {
+          ctx.clearRect(0, 0, W, H);
+
+          const fillTop = H * (1 - progress); // bottom-to-top fill
+
+          // Green fill (clipped to leaf shape if loaded)
+          ctx.save();
+          if (leafImg) {
+            // Clip to leaf silhouette using destination-in trick on offscreen
+            // Use a rect clip from fillTop downward so only the bottom % shows
+            ctx.beginPath();
+            ctx.rect(0, fillTop, W, H - fillTop);
+            ctx.clip();
+            ctx.drawImage(leafImg, 0, 0, W, H);
+          } else {
+            ctx.fillStyle = '#4caf50';
+            ctx.fillRect(0, fillTop, W, H - fillTop);
+          }
+          ctx.restore();
+
+          // Dim (unfilled) leaf on top
+          if (leafImg) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(0, 0, W, fillTop);
+            ctx.clip();
+            ctx.globalAlpha = 0.25;
+            ctx.drawImage(leafImg, 0, 0, W, H);
+            ctx.restore();
+          }
+        }
+
+        function loop() {
+          draw();
+          rafId = requestAnimationFrame(loop);
+        }
+        loop();
+
+        // Exposed so sketch.js can update progress
+        window.loadingProgress = function (pct) {
+          progress = Math.max(0, Math.min(1, pct / 100));
+        };
+
+        window.hideLoadingScreen = function () {
+          cancelAnimationFrame(rafId);
+          draw(); // final frame at 100 %
+          screen.classList.add('hidden');
+          setTimeout(() => { screen.style.display = 'none'; }, 650);
+        };
+      })();
+    </script>
     <script src="libraries/scenemanager.js"></script>
     <script src="scenes/title_screen.js"></script>
     <script src="scenes/info_screen.js"></script>

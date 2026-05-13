@@ -8,6 +8,32 @@ let carnaubaBtn, cajueiroBtn, juazeiroBtn, jucaBtn, mororoBtn, oitiBtn;
 let menuCarnauba, menuCajueiro, menuJuazeiro, menuJuca, menuMororo, menuOiti;
 let carnaubaDesc, cajueiroDesc, juazeiroDesc, jucaDesc, mororoDesc, oitiDesc;
 let carnaubaPodiumDesc, cajueiroPodiumDesc, juazeiroPodiumDesc, jucaPodiumDesc, mororoPodiumDesc, oitiPodiumDesc;
+
+// ── Loading progress tracking ────────────────────────────────────────────────
+let _loadTotal = 0;
+let _loadDone  = 0;
+function _trackLoad(loadFn, ...args) {
+  _loadTotal++;
+  const successCb = args[1] && typeof args[1] === 'function' ? args[1] : () => {};
+  const errorCb   = args[2] && typeof args[2] === 'function' ? args[2] : () => {};
+  const onDone = () => {
+    _loadDone++;
+    if (window.loadingProgress) {
+      window.loadingProgress(_loadTotal > 0 ? (_loadDone / _loadTotal) * 100 : 0);
+    }
+  };
+  return loadFn(args[0],
+    (...a) => { onDone(); successCb(...a); },
+    (...a) => { onDone(); errorCb(...a); }
+  );
+}
+function _trackLoadImage(path, successCb, errorCb) {
+  return _trackLoad(loadImage, path, successCb || (() => {}), errorCb || (() => {}));
+}
+function _trackLoadFont(path, successCb, errorCb) {
+  return _trackLoad(loadFont, path, successCb || (() => {}), errorCb || (() => {}));
+}
+// ────────────────────────────────────────────────────────────────────────────
 let trees = [
   { type: 'Carnaúba', img: () => carnaubaImg, btn: () => carnaubaBtn, menuImg: () => menuCarnauba, desc: () => carnaubaDesc, podiumDesc: () => carnaubaPodiumDesc, offset: 0.3, shadowCoefficient: 1 },
   { type: 'Cajueiro', img: () => cajueiroImg, btn: () => cajueiroBtn, menuImg: () => menuCajueiro, desc: () => cajueiroDesc, podiumDesc: () => cajueiroPodiumDesc, offset: 0.5, shadowCoefficient: 3 },
@@ -31,14 +57,15 @@ function preload() {
 }
 
 function loadSceneImages() {
-  pauseImg = loadImage('assets/game_screen/pause.png');
-  titleScreenImg = loadImage('assets/title_screen/title_screen.png');
-  startGameImg = loadImage('assets/title_screen/start_game.png');
-  podiumImg = loadImage('assets/podium_screen/podium.png');
+  pauseImg       = _trackLoadImage('assets/game_screen/pause.png');
+  titleScreenImg = _trackLoadImage('assets/title_screen/title_screen.png');
+  startGameImg   = _trackLoadImage('assets/title_screen/start_game.png');
+  podiumImg      = _trackLoadImage('assets/podium_screen/podium.png');
 }
 
 function setup() {
   console.log('Setup starting - all assets loaded!');
+  if (window.hideLoadingScreen) window.hideLoadingScreen();
   createCanvas(1920, 1080);
   displayMode('maxed');
   textFont(bodyFont);
@@ -72,7 +99,7 @@ function loadStreetImages() {
 
   for (let num of imageNumbers) {
     let imagePath = photosPath + "E_" + num + ".webp";
-    streetImages[i] = loadImage(imagePath,
+    streetImages[i] = _trackLoadImage(imagePath,
       () => { }, // Success callback - silent
       (err) => console.error('Failed to load image:', imagePath, err)
     );
@@ -82,12 +109,12 @@ function loadStreetImages() {
 }
 
 function loadTrees() {
-  carnaubaImg = loadImage('assets/trees/carnauba.png');
-  cajueiroImg = loadImage('assets/trees/cajueiro.png');
-  juazeiroImg = loadImage('assets/trees/juazeiro.png');
-  jucaImg = loadImage('assets/trees/juca.png');
-  mororoImg = loadImage('assets/trees/mororo.png');
-  oitiImg = loadImage('assets/trees/oiti.png');
+  carnaubaImg = _trackLoadImage('assets/trees/carnauba.png');
+  cajueiroImg = _trackLoadImage('assets/trees/cajueiro.png');
+  juazeiroImg = _trackLoadImage('assets/trees/juazeiro.png');
+  jucaImg     = _trackLoadImage('assets/trees/juca.png');
+  mororoImg   = _trackLoadImage('assets/trees/mororo.png');
+  oitiImg     = _trackLoadImage('assets/trees/oiti.png');
 }
 
 function setTreeDescriptions() {
@@ -109,37 +136,37 @@ function setTreePodiumDescriptions(treeTotal, shadowScore) {
 }
 
 function loadTreeButtons() {
-  carnaubaBtn = loadImage('assets/tree_buttons/carnauba_button.png');
-  cajueiroBtn = loadImage('assets/tree_buttons/cajueiro_button.png');
-  juazeiroBtn = loadImage('assets/tree_buttons/juazeiro_button.png');
-  jucaBtn = loadImage('assets/tree_buttons/juca_button.png');
-  mororoBtn = loadImage('assets/tree_buttons/mororo_button.png');
-  oitiBtn = loadImage('assets/tree_buttons/oiti_button.png');
+  carnaubaBtn = _trackLoadImage('assets/tree_buttons/carnauba_button.png');
+  cajueiroBtn = _trackLoadImage('assets/tree_buttons/cajueiro_button.png');
+  juazeiroBtn = _trackLoadImage('assets/tree_buttons/juazeiro_button.png');
+  jucaBtn     = _trackLoadImage('assets/tree_buttons/juca_button.png');
+  mororoBtn   = _trackLoadImage('assets/tree_buttons/mororo_button.png');
+  oitiBtn     = _trackLoadImage('assets/tree_buttons/oiti_button.png');
 }
 
 function loadMenuTrees() {
-  menuCarnauba = loadImage('assets/menu_trees/menu_carnauba.png');
-  menuCajueiro = loadImage('assets/menu_trees/menu_cajueiro.png');
-  menuJuazeiro = loadImage('assets/menu_trees/menu_juazeiro.png');
-  menuJuca = loadImage('assets/menu_trees/menu_juca.png');
-  menuMororo = loadImage('assets/menu_trees/menu_mororo.png');
-  menuOiti = loadImage('assets/menu_trees/menu_oiti.png');
+  menuCarnauba = _trackLoadImage('assets/menu_trees/menu_carnauba.png');
+  menuCajueiro = _trackLoadImage('assets/menu_trees/menu_cajueiro.png');
+  menuJuazeiro = _trackLoadImage('assets/menu_trees/menu_juazeiro.png');
+  menuJuca     = _trackLoadImage('assets/menu_trees/menu_juca.png');
+  menuMororo   = _trackLoadImage('assets/menu_trees/menu_mororo.png');
+  menuOiti     = _trackLoadImage('assets/menu_trees/menu_oiti.png');
 }
 
 function loadBackgroundAndFont() {
-  backgroundImg = loadImage('assets/background.png',
+  backgroundImg = _trackLoadImage('assets/background.png',
     () => console.log('Background loaded'),
     (err) => console.error('Failed to load background:', err)
   );
-  headingFont = loadFont('assets/fonts/pixel_operator/PixelOperator-Bold.ttf',
+  headingFont = _trackLoadFont('assets/fonts/pixel_operator/PixelOperator-Bold.ttf',
     () => console.log('Heading font loaded'),
     (err) => console.error('Failed to load heading font:', err)
   );
-  descriptionFont = loadFont('assets/fonts/pixel_operator/PixelOperator.ttf',
+  descriptionFont = _trackLoadFont('assets/fonts/pixel_operator/PixelOperator.ttf',
     () => console.log('Description font loaded'),
     (err) => console.error('Failed to load description font:', err)
   );
-  bodyFont = loadFont('assets/fonts/littlelego.ttf',
+  bodyFont = _trackLoadFont('assets/fonts/littlelego.ttf',
     () => console.log('Font loaded'),
     (err) => console.error('Failed to load font:', err)
   );
